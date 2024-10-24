@@ -1,12 +1,13 @@
 package de.andidebob.tasks;
 
-import de.andidebob.monoalphabetic.MonoalphabeticSubstitutor;
+import de.andidebob.monoalphabetic.MarkovChainMonteCarloSolver;
+import de.andidebob.monoalphabetic.language.EnglishLanguageModel;
 
 public class TaskMonoalphabeticSubstitution implements TaskHandler {
     @Override
     public void handleInput(String[] lines) {
-        MonoalphabeticSubstitutor substitutor = new MonoalphabeticSubstitutor();
-        String decypheredMessage = substitutor.decypher(lines[0]);
+        MarkovChainMonteCarloSolver substitutor = new MarkovChainMonteCarloSolver(new EnglishLanguageModel());
+        String decypheredMessage = substitutor.decryptMessage(lines[0]);
         System.out.println(decypheredMessage);
     }
 }
