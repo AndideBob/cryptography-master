@@ -18,7 +18,7 @@ public class Main {
         }
         try {
             String[] lines = readFile(args[0]);
-            TaskHandler handler = TaskHandler.caesar;
+            TaskHandler handler = TaskHandler.vigenere;
             handler.handleInput(lines);
         } catch (Exception e) {
             System.err.println(e.getMessage());
