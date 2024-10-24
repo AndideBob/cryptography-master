@@ -1,5 +1,7 @@
 package de.andidebob.frequency;
 
+import de.andidebob.language.LanguageModel;
+
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,16 @@ public class CharacterFrequencyResult {
                 .map(entry -> new CharacterFrequency(entry.getKey(), entry.getValue(), 1f * entry.getValue() / totalAmount))
                 .sorted(CharacterFrequency.comparator)
                 .toList();
+    }
+
+    public double getDeviationFromLanguageModel(LanguageModel model) {
+        double sum = 0;
+        for (CharacterFrequency myFrequency : getFrequencies()) {
+            CharacterFrequency modelFrequency = model.getForCharacters(myFrequency.character());
+            double upper = Math.pow(myFrequency.percentage() - modelFrequency.percentage(), 2);
+            sum += upper / modelFrequency.percentage();
+        }
+        return sum;
     }
 
     @Override

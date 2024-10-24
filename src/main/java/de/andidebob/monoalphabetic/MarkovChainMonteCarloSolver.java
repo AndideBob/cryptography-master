@@ -1,5 +1,6 @@
 package de.andidebob.monoalphabetic;
 
+import de.andidebob.alphabet.AlphabetKey;
 import de.andidebob.frequency.CharacterFrequency;
 import de.andidebob.frequency.CharacterFrequencyResult;
 import de.andidebob.language.BiGram;

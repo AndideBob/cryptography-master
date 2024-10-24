@@ -5,4 +5,5 @@ public interface TaskHandler {
 
     TaskHandler frequencyAnalysis = new TaskFrequencyAnalysis();
     TaskHandler monoalphabeticSubstitution = new TaskMonoalphabeticSubstitution();
+    TaskHandler caesar = new TaskCaesar();
 }

@@ -1,4 +1,4 @@
-package de.andidebob.monoalphabetic;
+package de.andidebob.alphabet;
 
 
 import de.andidebob.frequency.CharacterFrequency;
@@ -50,17 +50,28 @@ public class AlphabetKey {
         return result.toString();
     }
 
+    public AlphabetKey copy() {
+        AlphabetKey newKey = new AlphabetKey();
+        newKey.alphabet.putAll(alphabet);
+        return newKey;
+    }
+
+    public static AlphabetKey withCaesarShift(int shift) {
+        char characterA = 'A';
+        AlphabetKey result = new AlphabetKey();
+        for (int i = 0; i < 26; i++) {
+            char from = (char) (characterA + ((i + shift) % 26));
+            char to = (char) (characterA + i);
+            result.alphabet.put(from, to);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AlphabetMatcher:\n");
         alphabet.forEach((original, mapped) -> sb.append(String.format("%s -> %s\n", original, mapped)));
         return sb.toString();
-    }
-
-    public AlphabetKey copy() {
-        AlphabetKey newKey = new AlphabetKey();
-        newKey.alphabet.putAll(alphabet);
-        return newKey;
     }
 
     @Override

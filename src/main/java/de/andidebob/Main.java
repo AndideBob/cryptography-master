@@ -18,7 +18,7 @@ public class Main {
         }
         try {
             String[] lines = readFile(args[0]);
-            TaskHandler handler = TaskHandler.monoalphabeticSubstitution;
+            TaskHandler handler = TaskHandler.caesar;
             handler.handleInput(lines);
         } catch (Exception e) {
             System.err.println(e.getMessage());
