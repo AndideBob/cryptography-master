@@ -1,4 +1,4 @@
-package de.andidebob.monoalphabetic.language;
+package de.andidebob.language;
 
 import de.andidebob.frequency.CharacterFrequency;
 

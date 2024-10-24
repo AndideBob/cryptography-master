@@ -3,7 +3,7 @@ package de.andidebob.monoalphabetic;
 
 import de.andidebob.frequency.CharacterFrequency;
 import de.andidebob.frequency.CharacterFrequencyResult;
-import de.andidebob.monoalphabetic.language.LanguageModel;
+import de.andidebob.language.LanguageModel;
 
 import java.util.HashMap;
 import java.util.Objects;

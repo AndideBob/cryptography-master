@@ -2,23 +2,22 @@ package de.andidebob.monoalphabetic;
 
 import de.andidebob.frequency.CharacterFrequency;
 import de.andidebob.frequency.CharacterFrequencyResult;
-import de.andidebob.frequency.FrequencyAnalyzer;
-import de.andidebob.monoalphabetic.language.BiGram;
-import de.andidebob.monoalphabetic.language.LanguageModel;
-import lombok.RequiredArgsConstructor;
+import de.andidebob.language.BiGram;
+import de.andidebob.language.LanguageModel;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.Random;
 
-@RequiredArgsConstructor
-public class MarkovChainMonteCarloSolver {
+public class MarkovChainMonteCarloSolver extends MonoalphabeticSubstitutor {
 
-    private final FrequencyAnalyzer frequencyAnalyzer = FrequencyAnalyzer.lettersOnly();
     private final Random random = new Random();
-    private final LanguageModel languageModel;
 
+    public MarkovChainMonteCarloSolver(LanguageModel languageModel) {
+        super(languageModel);
+    }
 
+    @Override
     public String decryptMessage(String message) {
         System.out.println("Encrypted message: ");
         System.out.println(message);
@@ -75,10 +74,6 @@ public class MarkovChainMonteCarloSolver {
             }
         }
         return newKey;
-    }
-
-    private String decrypt(String message, AlphabetKey key) {
-        return key.mapAll(message);
     }
 
     private double evaluate(String message) {
