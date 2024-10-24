@@ -3,10 +3,10 @@ package de.andidebob.vigenere.kasiski.primefactor;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PrimeFactorizer {
+public class KasiskiCalculator {
 
     public Map<Integer, Integer> getCommonMultiples(Collection<Integer> numbers) {
-        final Map<Integer, Integer> counters = new HashMap<Integer, Integer>();
+        final Map<Integer, Integer> counters = new HashMap<>();
         for (Integer number : numbers) {
             Integer[] primeFactors = getPrimeFactors(number);
             Set<Integer> permutations = getPrimeFactorPermutations(primeFactors);

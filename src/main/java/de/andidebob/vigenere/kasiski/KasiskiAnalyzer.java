@@ -1,6 +1,6 @@
 package de.andidebob.vigenere.kasiski;
 
-import de.andidebob.vigenere.kasiski.primefactor.PrimeFactorizer;
+import de.andidebob.vigenere.kasiski.primefactor.KasiskiCalculator;
 import de.andidebob.vigenere.kasiski.substrings.SubStringInstance;
 import de.andidebob.vigenere.kasiski.substrings.SubstringReoccurrenceDetector;
 
@@ -20,12 +20,12 @@ public class KasiskiAnalyzer {
     public List<KeyLengthProbabilityResult> determineKeyLength(String input, int knownMaximumKeyLength) {
         List<SubStringInstance> reoccurringSubstrings = substringReoccurrenceDetector.findReoccurringSubstrings(input, MIN_SUBSTRING_LENGTH, MAX_SUBSTRING_LENGTH);
 
-        int longestSubstring = reoccurringSubstrings.stream().map(i -> i.getString().length()).max(Comparator.comparingInt(Integer::intValue)).get();
+        int longestSubstring = reoccurringSubstrings.stream().map(i -> i.getString().length()).max(Comparator.comparingInt(Integer::intValue)).orElseThrow(() -> new RuntimeException("At least one substring should exist!"));
 
         Set<Integer> distancesBetweenReoccurrences = getDistancesBetweenSubstringReoccurrences(reoccurringSubstrings);
 
-        PrimeFactorizer primeFactorizer = new PrimeFactorizer();
-        Map<Integer, Integer> commonMultiples = primeFactorizer.getCommonMultiples(distancesBetweenReoccurrences);
+        KasiskiCalculator kasiskiCalculator = new KasiskiCalculator();
+        Map<Integer, Integer> commonMultiples = kasiskiCalculator.getCommonMultiples(distancesBetweenReoccurrences);
 
         // Remove all instances with less than 5 occurances
         commonMultiples.entrySet().removeIf(entry -> entry.getValue() < 5);

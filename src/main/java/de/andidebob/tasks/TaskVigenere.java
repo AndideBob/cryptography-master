@@ -17,5 +17,7 @@ public class TaskVigenere implements TaskHandler {
 
         System.out.println("Keylength propabilities:");
         keyLengthProbabilityResults.stream().sorted(Comparator.comparingDouble(KeyLengthProbabilityResult::probability)).forEach(entry -> System.out.println(entry.keylength() + "|" + entry.probability()));
+
+        // TODO: Pick first porbable key length - Apply Cyphers - Frequency Analysis to LanguageModel - Repeat for other KeyLengths
     }
 }
