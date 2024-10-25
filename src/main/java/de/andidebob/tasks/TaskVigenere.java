@@ -1,5 +1,7 @@
 package de.andidebob.tasks;
 
+import de.andidebob.language.EnglishLanguageModel;
+import de.andidebob.vigenere.VigenereKeyFinder;
 import de.andidebob.vigenere.kasiski.KasiskiAnalyzer;
 import de.andidebob.vigenere.kasiski.KeyLengthProbabilityResult;
 
@@ -12,12 +14,27 @@ public class TaskVigenere implements TaskHandler {
 
     @Override
     public void handleInput(String[] lines) {
+        VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
+        keyFinder.findKey("VIGENERE", 3);
+    }
+
+    private void doStuff(String[] lines) {
+        final String fullString = String.join("\n", lines);
+
         KasiskiAnalyzer kasiskiAnalyzer = new KasiskiAnalyzer();
-        List<KeyLengthProbabilityResult> keyLengthProbabilityResults = kasiskiAnalyzer.determineKeyLength(String.join("\n", lines), KNOWN_MAX_KEY_LENGTH);
+        List<KeyLengthProbabilityResult> keyLengthProbabilityResults = kasiskiAnalyzer.determineKeyLength(fullString, KNOWN_MAX_KEY_LENGTH);
 
-        System.out.println("Keylength propabilities:");
-        keyLengthProbabilityResults.stream().sorted(Comparator.comparingDouble(KeyLengthProbabilityResult::probability)).forEach(entry -> System.out.println(entry.keylength() + "|" + entry.probability()));
+        Integer[] keyLengthsByProbability = keyLengthProbabilityResults.stream()
+                .sorted(Comparator.comparingDouble(KeyLengthProbabilityResult::probability).reversed())
+                .map(KeyLengthProbabilityResult::keylength)
+                .toArray(Integer[]::new);
 
-        // TODO: Pick first porbable key length - Apply Cyphers - Frequency Analysis to LanguageModel - Repeat for other KeyLengths
+        VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
+        keyFinder.findKey(fullString, 10);
+        for (int i = 0; i < keyLengthsByProbability.length; i++) {
+            //System.out.println("Decrypt with keyLength '" + keyLengthsByProbability[i] + "':");
+
+        }
+        // TODO: Frequency Analysis to LanguageModel - Repeat for other KeyLengths
     }
 }

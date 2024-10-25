@@ -2,10 +2,41 @@ package de.andidebob.language;
 
 import de.andidebob.frequency.CharacterFrequency;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import static de.andidebob.file.FileUtils.readFile;
 
 public class EnglishLanguageModel extends LanguageModel {
+
+    private static final String BIGRAM_FILE_PATH = ".\\tasks\\task04\\english_bigram.txt";
+
+    private final List<BiGram> biGrams;
+
+    public EnglishLanguageModel() {
+        try {
+            String[] bigramOccurrances = readFile(BIGRAM_FILE_PATH);
+            biGrams = new ArrayList<>();
+            int sumOfOccurrences = Arrays.stream(bigramOccurrances).mapToInt(Integer::parseInt).sum();
+            int index = 0;
+            for (char first = 'A'; first <= 'Z'; first++) {
+                for (char second = 'A'; second <= 'Z'; second++) {
+                    String raw = "" + first + second;
+                    double probability = 1.0 * Integer.parseInt(bigramOccurrances[index++]) / sumOfOccurrences;
+                    biGrams.add(new BiGram(raw, probability));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load Bigrams for Language Model English!");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public List<BiGram> getBigrams() {
+        return Collections.unmodifiableList(biGrams);
+    }
 
     @Override
     public Collection<CharacterFrequency> getFrequencies() {
@@ -36,33 +67,6 @@ public class EnglishLanguageModel extends LanguageModel {
                 new CharacterFrequency('J', 0, 0.00127f),
                 new CharacterFrequency('Q', 0, 0.00099f),
                 new CharacterFrequency('Z', 0, 0.00088f));
-    }
-
-    // Bigrams sourced from https://www3.nd.edu/~busiforc/handouts/cryptography/Letter%20Frequencies.html
-    @Override
-    public List<BiGram> getBigrams() {
-        return List.of(
-                new BiGram("th", 0.03882543f),
-                new BiGram("he", 0.03681391f),
-                new BiGram("in", 0.02283899f),
-                new BiGram("er", 0.02178042f),
-                new BiGram("an", 0.02140460f),
-                new BiGram("re", 0.01749394f),
-                new BiGram("nd", 0.01571977f),
-                new BiGram("on", 0.01418244f),
-                new BiGram("en", 0.01383239f),
-                new BiGram("at", 0.01335523f),
-                new BiGram("ou", 0.01285484f),
-                new BiGram("ed", 0.01275779f),
-                new BiGram("ha", 0.01274742f),
-                new BiGram("to", 0.01169655f),
-                new BiGram("or", 0.01151094f),
-                new BiGram("it", 0.01134891f),
-                new BiGram("is", 0.01109877f),
-                new BiGram("hi", 0.01092302f),
-                new BiGram("es", 0.01092301f),
-                new BiGram("ng", 0.01053385f)
-        );
     }
 
 }

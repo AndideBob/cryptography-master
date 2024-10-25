@@ -30,9 +30,10 @@ public class KasiskiAnalyzer {
         // Remove all instances with less than 5 occurances
         commonMultiples.entrySet().removeIf(entry -> entry.getValue() < 5);
         // Remove all instances with less characters than the longest reoccurrence
-        commonMultiples.entrySet().removeIf(entry -> entry.getKey() < longestSubstring || entry.getKey() > knownMaximumKeyLength);
-
-        commonMultiples.forEach((key, value) -> System.out.println(key + " | " + value));
+        // TODO Determine if this is valid
+        commonMultiples.entrySet().removeIf(entry -> entry.getKey() < longestSubstring);
+        // Remove all instances longer than max length
+        commonMultiples.entrySet().removeIf(entry -> entry.getKey() > knownMaximumKeyLength);
 
         int totalAmount = commonMultiples.values().stream().mapToInt(Integer::intValue).sum();
         return commonMultiples.entrySet().stream().map(entry -> new KeyLengthProbabilityResult(entry.getKey(), 1.0 * entry.getValue() / totalAmount)).toList();
