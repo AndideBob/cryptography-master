@@ -15,7 +15,8 @@ public class TaskVigenere implements TaskHandler {
     @Override
     public void handleInput(String[] lines) {
         VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
-        keyFinder.findKey("VIGENERE", 3);
+        // TODO Doesn't seem to work (VIGENERE -> abc -> VJIEOGRF)
+        keyFinder.findKey("VJIEOGRF", 3);
     }
 
     private void doStuff(String[] lines) {
