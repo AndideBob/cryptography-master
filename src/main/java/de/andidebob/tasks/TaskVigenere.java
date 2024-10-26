@@ -11,6 +11,9 @@ public class TaskVigenere implements TaskHandler {
     @Override
     public void handleInput(String[] lines) {
         VigenereDecrypter decrypter = new VigenereDecrypter(new EnglishLanguageModel());
+        
+        //TODO: Write to Output file
+        //TODO: Build docker container
 
         for (String line : lines) {
             System.out.println("Decrypting;");

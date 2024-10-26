@@ -24,7 +24,10 @@ public class AlphabetKey {
 
     public AlphabetKey(LanguageModel languageModel, CharacterFrequencyResult characterFrequencyResult) {
         alphabet = new HashMap<>();
-        Character[] charactersInFrequencyOrder = characterFrequencyResult.getFrequencies().stream().map(CharacterFrequency::character).toArray(Character[]::new);
+        Character[] charactersInFrequencyOrder = characterFrequencyResult.getFrequencies()
+                .stream()
+                .map(CharacterFrequency::character)
+                .toArray(Character[]::new);
         for (int i = 0; i < charactersInFrequencyOrder.length; i++) {
             alphabet.put(charactersInFrequencyOrder[i], languageModel.getByRarityIndex(i).character());
         }
@@ -57,14 +60,18 @@ public class AlphabetKey {
     }
 
     public static AlphabetKey withCaesarShift(int shift) {
-        char characterA = 'A';
         AlphabetKey result = new AlphabetKey();
+        applyShiftFrom(result, 'A', shift);
+        applyShiftFrom(result, 'a', shift);
+        return result;
+    }
+
+    private static void applyShiftFrom(final AlphabetKey key, final char characterA, int shift) {
         for (int i = 0; i < 26; i++) {
             char from = (char) (characterA + ((i + shift) % 26));
             char to = (char) (characterA + i);
-            result.alphabet.put(from, to);
+            key.alphabet.put(from, to);
         }
-        return result;
     }
 
     @Override

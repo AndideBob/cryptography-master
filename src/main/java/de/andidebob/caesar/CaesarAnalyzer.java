@@ -5,6 +5,9 @@ import de.andidebob.frequency.FrequencyAnalyzer;
 import de.andidebob.language.LanguageModel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 @RequiredArgsConstructor
 public class CaesarAnalyzer {
 
@@ -12,17 +15,20 @@ public class CaesarAnalyzer {
     private final LanguageModel languageModel;
 
     public String unshiftCaesar(String input) {
-        String result = input.toUpperCase();
-        double currentDeviation = analyzer.analyze(input).getDeviationFromLanguageModel(languageModel);
-        for (int i = 1; i < 26; i++) {
+        ArrayList<CaesarShiftResult> result = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
             AlphabetKey key = AlphabetKey.withCaesarShift(i);
-            String mappedLine = key.mapAll(input.toUpperCase());
-            double newDeviation = analyzer.analyze(mappedLine).getDeviationFromLanguageModel(languageModel);
-            if (newDeviation < currentDeviation) {
-                currentDeviation = newDeviation;
-                result = mappedLine;
-            }
+            String mappedLine = key.mapAll(input);
+            double deviationFromLanguageModel = analyzer.analyze(mappedLine).getDeviationFromLanguageModel(languageModel);
+            result.add(new CaesarShiftResult(i, mappedLine, deviationFromLanguageModel));
         }
-        return result;
+        return result.stream()
+                .min(Comparator.comparingDouble(CaesarShiftResult::languageDeviation))
+                .orElseThrow(() -> new RuntimeException("Expected at least one result!"))
+                .result;
+    }
+
+    private record CaesarShiftResult(int shift, String result, double languageDeviation) {
+
     }
 }

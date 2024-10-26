@@ -55,7 +55,7 @@ public class VigenereDecrypter {
             keys[i] = AlphabetKey.withCaesarShift(key.charAt(i) - 'A');
         }
         StringBuilder result = new StringBuilder();
-        char[] characters = input.toUpperCase().toCharArray();
+        char[] characters = input.toCharArray();
         int keyIndex = 0;
         for (char character : characters) {
             if (("" + character).matches("[a-zA-Z]")) {
