@@ -2,12 +2,7 @@ package de.andidebob.tasks;
 
 import de.andidebob.language.EnglishLanguageModel;
 import de.andidebob.vigenere.VigenereDecrypter;
-import de.andidebob.vigenere.VigenereKeyFinder;
-import de.andidebob.vigenere.kasiski.KasiskiAnalyzer;
-import de.andidebob.vigenere.kasiski.KeyLengthProbabilityResult;
-
-import java.util.Comparator;
-import java.util.List;
+import de.andidebob.vigenere.VignereDecryptionResult;
 
 public class TaskVigenere implements TaskHandler {
 
@@ -15,23 +10,15 @@ public class TaskVigenere implements TaskHandler {
 
     @Override
     public void handleInput(String[] lines) {
-        final String fullString = String.join("\n", lines);
+        VigenereDecrypter decrypter = new VigenereDecrypter(new EnglishLanguageModel());
 
-        KasiskiAnalyzer kasiskiAnalyzer = new KasiskiAnalyzer();
-        List<KeyLengthProbabilityResult> keyLengthProbabilityResults = kasiskiAnalyzer.determineKeyLength(fullString, KNOWN_MAX_KEY_LENGTH);
-
-        Integer[] keyLengthsByProbability = keyLengthProbabilityResults.stream()
-                .sorted(Comparator.comparingDouble(KeyLengthProbabilityResult::probability).reversed())
-                .map(KeyLengthProbabilityResult::keylength)
-                .toArray(Integer[]::new);
-
-        VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
-        VigenereDecrypter decrypter = new VigenereDecrypter();
-        for (Integer integer : keyLengthsByProbability) {
-            String key = keyFinder.findKey(fullString, integer);
-            System.out.println("Trying key: " + key);
-            System.out.println(decrypter.decrypt(fullString, key));
-            // TODO: Frequency Analysis to LanguageModel
+        for (String line : lines) {
+            System.out.println("Decrypting;");
+            System.out.println(line);
+            VignereDecryptionResult decryptionResult = decrypter.decrypt(line, KNOWN_MAX_KEY_LENGTH);
+            System.out.println(decryptionResult.output());
+            System.out.println("Used Key: " + decryptionResult.key());
+            System.out.println("LanguageDeviationScore: " + decryptionResult.languageDeviation());
         }
     }
 }
