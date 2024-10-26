@@ -25,16 +25,25 @@ public class VigenereKeyFinder {
     }
 
     public String findKey(String input, int keyLength) {
-        Set<IndexGroup> indexGroups = getIndexGroups(input, keyLength);
+        // Need to filter out any non-alphabetic characters and make string uppercase
+        String sterilizedInput = sterelizeInput(input);
+
+        Set<IndexGroup> indexGroups = getIndexGroups(sterilizedInput, keyLength);
 
         HashMap<IndexGroup, BigramScore> scores = new HashMap<>();
         indexGroups.forEach(group -> scores.put(group, calculateBestBigramScore(group)));
+        /* Log results
         scores.forEach((group, score) -> {
             System.out.println(group.toString());
             System.out.println("Best Bigram: " + score.toString());
         });
-        // TODO Build key
-        return "";
+        */
+        return buildKey(scores, keyLength);
+    }
+
+    private String sterelizeInput(String input) {
+        String sterilizedInput = input.replaceAll("[^a-zA-Z]", "");
+        return sterilizedInput.toUpperCase();
     }
 
     private BigramScore calculateBestBigramScore(IndexGroup group) {
@@ -49,7 +58,6 @@ public class VigenereKeyFinder {
                 char a = bigramKeys[0].map(string.charAt(0));
                 char b = bigramKeys[1].map(string.charAt(1));
                 String stringToScore = "" + a + b;
-                // TODO Review
                 score += Math.log(bigrams.get(stringToScore));
             }
             scores.add(new BigramScore(bigram, score));
@@ -57,6 +65,24 @@ public class VigenereKeyFinder {
         return scores.stream()
                 .max(Comparator.comparingDouble(BigramScore::score))
                 .orElseThrow(() -> new RuntimeException("Could not determine best Bigram!"));
+    }
+
+    private String buildKey(Map<IndexGroup, BigramScore> scoreMap, int keyLength) {
+        final Set<IndexGroup> indexGroups = scoreMap.keySet();
+        StringBuilder key = new StringBuilder();
+        for (int i = 0; i < keyLength; i++) {
+            final int currentIndex = i;
+            IndexGroup a = indexGroups.stream().filter(group -> group.index == currentIndex).findFirst().orElseThrow(() -> new RuntimeException("Expected Indexgroup with index " + currentIndex + "!"));
+            IndexGroup b = indexGroups.stream().filter(group -> group.index == (currentIndex + (keyLength - 1)) % keyLength).findFirst().orElseThrow(() -> new RuntimeException("Expected Indexgroup with index " + ((currentIndex + (keyLength - 1)) % keyLength) + "!"));
+            BigramScore scoreA = scoreMap.get(a);
+            BigramScore scoreB = scoreMap.get(b);
+            if (scoreA.score > scoreB.score) {
+                key.append(scoreA.bigram.charAt(0));
+            } else {
+                key.append(scoreB.bigram.charAt(1));
+            }
+        }
+        return key.toString();
     }
 
     private Set<IndexGroup> getIndexGroups(String input, int keyLength) {

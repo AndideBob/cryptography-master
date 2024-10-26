@@ -20,15 +20,21 @@ public class KasiskiAnalyzer {
     public List<KeyLengthProbabilityResult> determineKeyLength(String input, int knownMaximumKeyLength) {
         List<SubStringInstance> reoccurringSubstrings = substringReoccurrenceDetector.findReoccurringSubstrings(input, MIN_SUBSTRING_LENGTH, MAX_SUBSTRING_LENGTH);
 
-        int longestSubstring = reoccurringSubstrings.stream().map(i -> i.getString().length()).max(Comparator.comparingInt(Integer::intValue)).orElseThrow(() -> new RuntimeException("At least one substring should exist!"));
+        if (reoccurringSubstrings.isEmpty()) {
+            return getAllKeyLengths(knownMaximumKeyLength);
+        }
+
+        int longestSubstring = reoccurringSubstrings
+                .stream()
+                .map(i -> i.getString().length())
+                .max(Comparator.comparingInt(Integer::intValue))
+                .orElseThrow(() -> new RuntimeException("At least one substring should exist!"));
 
         Set<Integer> distancesBetweenReoccurrences = getDistancesBetweenSubstringReoccurrences(reoccurringSubstrings);
 
         KasiskiCalculator kasiskiCalculator = new KasiskiCalculator();
         Map<Integer, Integer> commonMultiples = kasiskiCalculator.getCommonMultiples(distancesBetweenReoccurrences);
 
-        // Remove all instances with less than 5 occurances
-        commonMultiples.entrySet().removeIf(entry -> entry.getValue() < 5);
         // Remove all instances with less characters than the longest reoccurrence
         // TODO Determine if this is valid
         commonMultiples.entrySet().removeIf(entry -> entry.getKey() < longestSubstring);
@@ -37,6 +43,14 @@ public class KasiskiAnalyzer {
 
         int totalAmount = commonMultiples.values().stream().mapToInt(Integer::intValue).sum();
         return commonMultiples.entrySet().stream().map(entry -> new KeyLengthProbabilityResult(entry.getKey(), 1.0 * entry.getValue() / totalAmount)).toList();
+    }
+
+    private List<KeyLengthProbabilityResult> getAllKeyLengths(int knownMaximumKeyLength) {
+        List<KeyLengthProbabilityResult> results = new ArrayList<>();
+        for (int i = 1; i <= knownMaximumKeyLength; i++) {
+            results.add(new KeyLengthProbabilityResult(i, 1.0 / knownMaximumKeyLength));
+        }
+        return results;
     }
 
 

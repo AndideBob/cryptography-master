@@ -4,26 +4,22 @@ import de.andidebob.alphabet.AlphabetKey;
 
 public class VigenereDecrypter {
 
-    public String decrypt(String input, int keyLength) {
-        AlphabetKey[] keys = new AlphabetKey[keyLength];
-        for (int i = 0; i < keyLength; i++) {
-            keys[i] = AlphabetKey.withCaesarShift(i);
+    public String decrypt(String input, String key) {
+        AlphabetKey[] keys = new AlphabetKey[key.length()];
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = AlphabetKey.withCaesarShift(key.charAt(i) - 'A');
         }
         StringBuilder result = new StringBuilder();
-        char[] chars = input.toUpperCase().toCharArray();
-        int index = 0;
-        for (char aChar : chars) {
-            if (isValidChar(aChar)) {
-                result.append(keys[index % keyLength].map(chars[index]));
-                index++;
+        char[] characters = input.toUpperCase().toCharArray();
+        int keyIndex = 0;
+        for (char character : characters) {
+            if (("" + character).matches("[a-zA-Z]")) {
+                result.append(keys[keyIndex].map(character));
+                keyIndex = (keyIndex + 1) % keys.length;
             } else {
-                result.append(aChar);
+                result.append(character);
             }
         }
         return result.toString();
-    }
-
-    private boolean isValidChar(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
     }
 }

@@ -2,26 +2,25 @@ package de.andidebob.language;
 
 import de.andidebob.frequency.CharacterFrequency;
 
+import java.io.*;
 import java.util.*;
-
-import static de.andidebob.file.FileUtils.readFile;
 
 public class EnglishLanguageModel extends LanguageModel {
 
-    private static final String BIGRAM_FILE_PATH = ".\\tasks\\task04\\english_bigram.txt";
+    private static final String BIGRAM_FILE_NAME = "english_bigram.txt";
 
     private final List<BiGram> biGrams;
 
     public EnglishLanguageModel() {
         try {
-            String[] bigramOccurrances = readFile(BIGRAM_FILE_PATH);
+            String[] bigramOccurrences = readBigramOccurrences();
             biGrams = new ArrayList<>();
-            int sumOfOccurrences = Arrays.stream(bigramOccurrances).mapToInt(Integer::parseInt).sum();
+            int sumOfOccurrences = Arrays.stream(bigramOccurrences).mapToInt(Integer::parseInt).sum();
             int index = 0;
             for (char first = 'A'; first <= 'Z'; first++) {
                 for (char second = 'A'; second <= 'Z'; second++) {
                     String raw = "" + first + second;
-                    double probability = 1.0 * Integer.parseInt(bigramOccurrances[index++]) / sumOfOccurrences;
+                    double probability = 1.0 * Integer.parseInt(bigramOccurrences[index++]) / sumOfOccurrences;
                     biGrams.add(new BiGram(raw, probability));
                 }
             }
@@ -67,6 +66,26 @@ public class EnglishLanguageModel extends LanguageModel {
                 new CharacterFrequency('J', 0, 0.00127f),
                 new CharacterFrequency('Q', 0, 0.00099f),
                 new CharacterFrequency('Z', 0, 0.00088f));
+    }
+
+    private String[] readBigramOccurrences() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource(BIGRAM_FILE_NAME)).getFile());
+        try (InputStream inputStream = new FileInputStream(file)) {
+            List<String> lines = new ArrayList<>();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+            }
+            return lines.toArray(String[]::new);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 }

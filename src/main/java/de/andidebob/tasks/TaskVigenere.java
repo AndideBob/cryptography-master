@@ -1,6 +1,7 @@
 package de.andidebob.tasks;
 
 import de.andidebob.language.EnglishLanguageModel;
+import de.andidebob.vigenere.VigenereDecrypter;
 import de.andidebob.vigenere.VigenereKeyFinder;
 import de.andidebob.vigenere.kasiski.KasiskiAnalyzer;
 import de.andidebob.vigenere.kasiski.KeyLengthProbabilityResult;
@@ -14,12 +15,6 @@ public class TaskVigenere implements TaskHandler {
 
     @Override
     public void handleInput(String[] lines) {
-        VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
-        // TODO Doesn't seem to work (VIGENERE -> abc -> VJIEOGRF)
-        keyFinder.findKey("VJIEOGRF", 3);
-    }
-
-    private void doStuff(String[] lines) {
         final String fullString = String.join("\n", lines);
 
         KasiskiAnalyzer kasiskiAnalyzer = new KasiskiAnalyzer();
@@ -31,11 +26,12 @@ public class TaskVigenere implements TaskHandler {
                 .toArray(Integer[]::new);
 
         VigenereKeyFinder keyFinder = new VigenereKeyFinder(new EnglishLanguageModel());
-        keyFinder.findKey(fullString, 10);
-        for (int i = 0; i < keyLengthsByProbability.length; i++) {
-            //System.out.println("Decrypt with keyLength '" + keyLengthsByProbability[i] + "':");
-
+        VigenereDecrypter decrypter = new VigenereDecrypter();
+        for (Integer integer : keyLengthsByProbability) {
+            String key = keyFinder.findKey(fullString, integer);
+            System.out.println("Trying key: " + key);
+            System.out.println(decrypter.decrypt(fullString, key));
+            // TODO: Frequency Analysis to LanguageModel
         }
-        // TODO: Frequency Analysis to LanguageModel - Repeat for other KeyLengths
     }
 }
