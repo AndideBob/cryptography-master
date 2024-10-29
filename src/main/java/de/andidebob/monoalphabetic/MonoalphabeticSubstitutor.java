@@ -15,6 +15,7 @@ public class MonoalphabeticSubstitutor {
     public String decryptMessage(String message) {
         final CharacterFrequencyResult frequencyResult = frequencyAnalyzer.analyze(message);
         AlphabetKey currentKey = new AlphabetKey(languageModel, frequencyResult);
+        System.out.println(currentKey);
         return decrypt(message, currentKey);
     }
 

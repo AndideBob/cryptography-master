@@ -21,6 +21,8 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
 
     implementation("org.apache.commons:commons-lang3:3.0")
+    implementation("com.google.guava:guava:32.0.0-android")
+
 }
 
 tasks.test {
