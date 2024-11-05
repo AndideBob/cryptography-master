@@ -42,6 +42,8 @@ public class VigenereDecrypter {
             CharacterFrequencyResult frequencyResult = frequencyAnalyzer.analyze(result);
             double deviationFromLanguageModel = frequencyResult.getDeviationFromLanguageModel(languageModel);
             decryptionResults.add(new VignereDecryptionResult(key, result, deviationFromLanguageModel));
+            // For increased performance but less accuracy enable
+            // if(deviationFromLanguageModel < 0.05) { break; }
         }
         return decryptionResults.stream()
                 .min(Comparator.comparingDouble(VignereDecryptionResult::languageDeviation))

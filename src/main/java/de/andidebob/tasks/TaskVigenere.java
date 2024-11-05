@@ -17,9 +17,7 @@ public class TaskVigenere implements TaskHandler {
         Stopwatch stopwatch = Stopwatch.createStarted();
         VigenereDecrypter decrypter = new VigenereDecrypter(new EnglishLanguageModel());
 
-        //TODO: First frequency analysis
         //TODO: Repeating patters in keys
-        //TODO: Write to Output file
         //TODO: Build docker container
         ArrayList<String> resultLines = new ArrayList<>();
 
