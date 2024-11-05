@@ -2,7 +2,9 @@ package de.andidebob.language;
 
 import de.andidebob.frequency.CharacterFrequency;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class EnglishLanguageModel extends LanguageModel {
@@ -70,21 +72,20 @@ public class EnglishLanguageModel extends LanguageModel {
 
     private String[] readBigramOccurrences() {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource(BIGRAM_FILE_NAME)).getFile());
-        try (InputStream inputStream = new FileInputStream(file)) {
-            List<String> lines = new ArrayList<>();
 
+        try (InputStream inputStream = Objects.requireNonNull(classLoader.getResourceAsStream(BIGRAM_FILE_NAME))) {
+            List<String> lines = new ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     lines.add(line);
                 }
             }
-            return lines.toArray(String[]::new);
+            return lines.toArray(new String[0]);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to load resource file: " + BIGRAM_FILE_NAME, e);
         }
     }
 

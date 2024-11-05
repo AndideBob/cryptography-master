@@ -1,9 +1,17 @@
 plugins {
     id("java")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+tasks.shadowJar {
+    manifest {
+        attributes["Main-Class"] = "de.andidebob.Main" // Replace with the fully qualified name of your main class
+    }
+    from(sourceSets.main.get().resources)
+}
 
 repositories {
     mavenCentral()
@@ -27,4 +35,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
