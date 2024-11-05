@@ -3,8 +3,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "de.andidebob"
+version = "Andreas-Lau"
 
 tasks.shadowJar {
     manifest {
