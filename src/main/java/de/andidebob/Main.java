@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.andidebob.file.FileUtils.readFile;
 
@@ -20,22 +22,75 @@ public class Main {
             printHelp();
             return;
         }
+        FileData fileData = readArguments(args);
         String[] outputLines = new String[0];
         try {
-            String[] lines = readFile(args[0]);
+            List<String[]> linesByFile = fileData.inputFiles.stream().map(fileName -> {
+                try {
+                    return readFile(fileName);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList();
             TaskHandler handler = TaskHandler.vigenere;
-            outputLines = handler.handleInput(lines);
+            outputLines = handler.handleInput(linesByFile);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-        if (args.length >= 2 && outputLines.length > 0) {
-            writeOutputToFile(String.join("\n", outputLines), args[1]);
+        if (fileData.outputFile != null && outputLines.length > 0) {
+            writeOutputToFile(String.join("\n", outputLines), fileData.outputFile);
         }
 
     }
 
     private static void printHelp() {
         System.out.println("Usage: java -jar cryptography-master.jar [input file]");
+    }
+
+    private static FileData readArguments(String[] args) {
+        // Parse and validate arguments
+        ArrayList<String> inputFiles = new ArrayList<>();
+        String outputFile = null;
+        boolean inFlag = false;
+        boolean outFlag = false;
+
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "-in":
+                    // Ensure -in is followed by at least one filename
+                    inFlag = true;
+                    outFlag = false;
+                    i++;
+                    while (i < args.length && !args[i].startsWith("-")) {
+                        inputFiles.add(args[i]);
+                        i++;
+                    }
+                    i--; // Step back one since we may hit a new flag
+                    if (inputFiles.isEmpty()) {
+                        throw new RuntimeException("Error: -in flag requires at least one input file.");
+                    }
+                    break;
+                case "-out":
+                    // Ensure -out is followed by exactly one filename
+                    outFlag = true;
+                    inFlag = false;
+                    i++;
+                    if (i < args.length && !args[i].startsWith("-")) {
+                        outputFile = args[i];
+                    } else {
+                        throw new RuntimeException("Error: -out flag requires exactly one output file.");
+                    }
+                    break;
+
+                default:
+                    // If an unrecognized argument is found, show an error
+                    if (!args[i].startsWith("-")) {
+                        throw new RuntimeException("Error: Unrecognized argument " + args[i]);
+                    }
+                    break;
+            }
+        }
+        return new FileData(inputFiles, outputFile);
     }
 
     private static void writeOutputToFile(String content, String fileName) {
@@ -59,5 +114,9 @@ public class Main {
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private record FileData(List<String> inputFiles, String outputFile) {
+
     }
 }

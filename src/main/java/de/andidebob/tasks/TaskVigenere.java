@@ -6,6 +6,7 @@ import de.andidebob.vigenere.VigenereDecrypter;
 import de.andidebob.vigenere.VignereDecryptionResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class TaskVigenere implements TaskHandler {
@@ -13,7 +14,10 @@ public class TaskVigenere implements TaskHandler {
     private static final int KNOWN_MAX_KEY_LENGTH = 20;
 
     @Override
-    public String[] handleInput(String[] lines) {
+    public String[] handleInput(List<String[]> linesByFile) {
+        if (linesByFile.isEmpty()) {
+            throw new RuntimeException("Expected input from at least one file");
+        }
         Stopwatch stopwatch = Stopwatch.createStarted();
         VigenereDecrypter decrypter = new VigenereDecrypter(new EnglishLanguageModel());
 
@@ -21,7 +25,7 @@ public class TaskVigenere implements TaskHandler {
         //TODO: Build docker container
         ArrayList<String> resultLines = new ArrayList<>();
 
-        for (String line : lines) {
+        for (String line : linesByFile.get(0)) {
             System.out.println("Decrypting;");
             System.out.println(line);
             VignereDecryptionResult decryptionResult = decrypter.decrypt(line, KNOWN_MAX_KEY_LENGTH);

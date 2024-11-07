@@ -1,7 +1,9 @@
 package de.andidebob.tasks;
 
+import java.util.List;
+
 public interface TaskHandler {
-    String[] handleInput(String[] lines);
+    String[] handleInput(List<String[]> linesByFile);
 
     TaskHandler frequencyAnalysis = new TaskFrequencyAnalysis();
     TaskHandler monoalphabeticSubstitution = new TaskMonoalphabeticSubstitution();
