@@ -9,4 +9,5 @@ public interface TaskHandler {
     TaskHandler monoalphabeticSubstitution = new TaskMonoalphabeticSubstitution();
     TaskHandler caesar = new TaskCaesar();
     TaskHandler vigenere = new TaskVigenere();
+    TaskHandler otp = new TaskOTP();
 }

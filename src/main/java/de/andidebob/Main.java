@@ -32,7 +32,7 @@ public class Main {
                     throw new RuntimeException(e);
                 }
             }).toList();
-            TaskHandler handler = TaskHandler.vigenere;
+            TaskHandler handler = TaskHandler.otp;
             outputLines = handler.handleInput(linesByFile);
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -51,15 +51,11 @@ public class Main {
         // Parse and validate arguments
         ArrayList<String> inputFiles = new ArrayList<>();
         String outputFile = null;
-        boolean inFlag = false;
-        boolean outFlag = false;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-in":
                     // Ensure -in is followed by at least one filename
-                    inFlag = true;
-                    outFlag = false;
                     i++;
                     while (i < args.length && !args[i].startsWith("-")) {
                         inputFiles.add(args[i]);
@@ -72,8 +68,6 @@ public class Main {
                     break;
                 case "-out":
                     // Ensure -out is followed by exactly one filename
-                    outFlag = true;
-                    inFlag = false;
                     i++;
                     if (i < args.length && !args[i].startsWith("-")) {
                         outputFile = args[i];
