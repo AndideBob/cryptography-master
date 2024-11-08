@@ -28,6 +28,26 @@ public class HexString {
         return new HexString(result.toString());
     }
 
+    public HexString padToLength(int length) {
+        String paddedHex = String.format("%" + length + "s", this.hexValue).replace(' ', '0');
+        return new HexString(paddedHex);
+    }
+
+    public HexString getHexCharAt(int index) {
+        if (index < 0 || index > hexValue.length() - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        return new HexString(hexValue.substring(index, index + 2));
+    }
+
+    public char charAt(int index) {
+        return hexValue.charAt(index);
+    }
+
+    public int getLength() {
+        return hexValue.length();
+    }
+
     public static HexString ofString(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
@@ -41,11 +61,7 @@ public class HexString {
         for (int i = 0; i < hexValue.length(); i += 2) {
             String hexPair = hexValue.substring(i, i + 2);
             int decimal = Integer.parseInt(hexPair, 16);
-            if (decimal == 0) {
-                sb.append(' ');
-            } else {
-                sb.append((char) decimal);
-            }
+            sb.append((char) decimal);
         }
         return sb.toString();
     }

@@ -10,4 +10,5 @@ public interface TaskHandler {
     TaskHandler caesar = new TaskCaesar();
     TaskHandler vigenere = new TaskVigenere();
     TaskHandler otp = new TaskOTP();
+    TaskHandler mtp = new TaskMTP();
 }

@@ -32,7 +32,7 @@ public class Main {
                     throw new RuntimeException(e);
                 }
             }).toList();
-            TaskHandler handler = TaskHandler.otp;
+            TaskHandler handler = TaskHandler.mtp;
             outputLines = handler.handleInput(linesByFile);
         } catch (Exception e) {
             System.err.println(e.getMessage());
