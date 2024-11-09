@@ -17,7 +17,7 @@ public class TaskMTP implements TaskHandler {
         }
         HexString[] cipherLines = prepareHexString(linesByFile.getFirst());
 
-        HexString guessedKey = solver.determineKeyAlt(Set.of(cipherLines));
+        HexString guessedKey = solver.determineKeyByGuessingProbability(Set.of(cipherLines));
 
         System.out.println("Trying to decrypt:");
         for (HexString cipherLine : cipherLines) {

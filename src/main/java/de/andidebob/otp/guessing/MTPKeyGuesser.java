@@ -1,23 +1,23 @@
-package de.andidebob.otp;
+package de.andidebob.otp.guessing;
 
-import java.util.*;
+import de.andidebob.otp.HexString;
+import de.andidebob.otp.StringXORMap;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MTPKeyGuesser {
 
     private final int maxLength;
-    private final Set<HexString> cipherTexts;
+    private final HashSet<HexString> cipherTexts;
 
-    public MTPKeyGuesser(Collection<HexString> cipherTexts) {
-        this.maxLength = cipherTexts.stream()
-                .max(Comparator.comparingInt(HexString::getLength))
-                .orElseThrow(() -> new RuntimeException("Expected at least one element!"))
-                .getLength();
-        // Pad Strings to same length
-        this.cipherTexts = cipherTexts.stream()
-                .map(c -> c.padToLength(maxLength))
-                .collect(Collectors.toSet());
+    public MTPKeyGuesser(List<HexString> paddedXORs) {
+        this.maxLength = paddedXORs.getFirst().getLength();
+        this.cipherTexts = new HashSet<>(paddedXORs);
     }
 
 

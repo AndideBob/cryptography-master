@@ -1,4 +1,4 @@
-package de.andidebob.otp;
+package de.andidebob.otp.guessing;
 
 import java.util.Collection;
 import java.util.HashMap;
