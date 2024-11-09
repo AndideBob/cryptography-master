@@ -9,10 +9,10 @@ public class MTPSolver {
 
         MTPKeyGuesser keyGuesser = new MTPKeyGuesser(ciphertexts);
 
-        ArrayList<Set<Character>> possibleKeyCharacters = keyGuesser.determinePossibleKeyCharacters();
+        ArrayList<KeyCharacterProbability> possibleKeyCharacters = keyGuesser.determinePossibleKeyCharacters();
 
         for (int i = 0; i < possibleKeyCharacters.size(); i++) {
-            System.out.println(i + " -> " + possibleKeyCharacters.get(i));
+            System.out.println(i + " -> " + possibleKeyCharacters.get(i).getCharactersByProbability());
         }
         return new HexString("asdf");
     }

@@ -21,11 +21,11 @@ public class MTPKeyGuesser {
     }
 
 
-    public ArrayList<Set<Character>> determinePossibleKeyCharacters() {
-        ArrayList<Set<Character>> keyCharacterGuesses = new ArrayList<>();
+    public ArrayList<KeyCharacterProbability> determinePossibleKeyCharacters() {
+        ArrayList<KeyCharacterProbability> keyCharacterGuesses = new ArrayList<>();
         // Initialize with '0' (null byte for XOR)
         for (int i = 0; i < maxLength / 2; i++) {
-            keyCharacterGuesses.add(new HashSet<>());
+            keyCharacterGuesses.add(new KeyCharacterProbability());
         }
 
         HashSet<HexString> coveredXORs = new HashSet<>();
