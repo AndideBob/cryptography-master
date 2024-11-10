@@ -1,14 +1,17 @@
 package de.andidebob.otp;
 
-import de.andidebob.otp.guessing.KeyCharacterProbability;
+import de.andidebob.mtp.MTPKeyStorage;
 import de.andidebob.otp.guessing.MTPKeyGuesser;
+import de.andidebob.otp.hexstring.BasicHexString;
+import de.andidebob.otp.hexstring.HexString;
+import de.andidebob.otp.hexstring.XORHexString;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MTPSolver {
 
-    public List<HexString> getPaddedXORs(Collection<HexString> ciphertexts) {
+    public List<XORHexString> getPaddedXORs(Collection<HexString> ciphertexts) {
         int maxLength = ciphertexts.stream()
                 .max(Comparator.comparingInt(HexString::getLength))
                 .orElseThrow(() -> new RuntimeException("Expected at least one element!"))
@@ -22,13 +25,13 @@ public class MTPSolver {
                 System.out::println
         );
 
-        ArrayList<HexString> coveredXORs = new ArrayList<>();
+        ArrayList<XORHexString> coveredXORs = new ArrayList<>();
         for (HexString ciphertextA : paddedCiphertexts) {
             for (HexString ciphertextB : paddedCiphertexts) {
                 if (ciphertextA.equals(ciphertextB)) {
                     continue;
                 }
-                HexString xor = ciphertextA.xor(ciphertextB);
+                XORHexString xor = ciphertextA.xor(ciphertextB);
                 if (!coveredXORs.contains(xor)) {
                     coveredXORs.add(xor);
                 }
@@ -37,29 +40,48 @@ public class MTPSolver {
         return coveredXORs;
     }
 
-    public HexString determineKeyByGuessingProbability(Collection<HexString> ciphertexts) {
-        List<HexString> paddedXORs = getPaddedXORs(ciphertexts);
+    public BasicHexString determineKeyByGuessingProbability(Collection<HexString> ciphertexts, int requiredKeyLength) {
+        List<XORHexString> paddedXORs = getPaddedXORs(ciphertexts);
 
+        MTPKeyStorage possibleKeyCharacters = determinePossibleKeyCharacters(paddedXORs, requiredKeyLength);
+
+        ;
+        System.out.println(possibleKeyCharacters.toString());
+        System.out.println("Permutations: " + possibleKeyCharacters.getPermutations());
+        return new BasicHexString("asdf");
+    }
+
+    private MTPKeyStorage determinePossibleKeyCharacters(List<XORHexString> paddedXORs, int requiredKeyLength) {
+        System.out.println("Determining possible Key Characters...");
         MTPKeyGuesser keyGuesser = new MTPKeyGuesser(paddedXORs);
 
-        ArrayList<KeyCharacterProbability> possibleKeyCharacters = keyGuesser.determinePossibleKeyCharacters();
+        MTPKeyStorage possibleKeyCharacters = keyGuesser.determinePossibleKeyCharacters(false);
 
-        for (int i = 0; i < possibleKeyCharacters.size(); i++) {
-            System.out.println(i + " -> " + possibleKeyCharacters.get(i).getCharactersByProbability());
+        int keyLength = possibleKeyCharacters.getKeyLength();
+        int earliestCharacterNeeded = keyLength - requiredKeyLength;
+        boolean needExtendedAscii = false;
+        for (int i = keyLength - 1; i >= earliestCharacterNeeded; i--) {
+            if (possibleKeyCharacters.getCharactersAt(i).isEmpty()) {
+                needExtendedAscii = true;
+            }
         }
-        return new HexString("asdf");
+        if (needExtendedAscii) {
+            System.out.println("Extended Ascii needed, recomputing...");
+            return keyGuesser.determinePossibleKeyCharacters(true);
+        }
+        return possibleKeyCharacters;
     }
 
 
-    public HexString determineKeyByDoingSomething(Collection<HexString> ciphertexts) {
-        List<HexString> paddedXORs = getPaddedXORs(ciphertexts);
+    public BasicHexString determineKeyByDoingSomething(Collection<HexString> ciphertexts) {
+        List<XORHexString> paddedXORs = getPaddedXORs(ciphertexts);
 
         int maxLength = paddedXORs.getFirst().getLength();
         char[] keyGuess = new char[maxLength];
         // Initialize with '0' (null byte for XOR)
         Arrays.fill(keyGuess, '0');
 
-        for (HexString xor : paddedXORs) {
+        for (BasicHexString xor : paddedXORs) {
             String xorPlaintext = xor.convertToString();
             for (int i = 0; i < xorPlaintext.length(); i++) {
                 char c = xorPlaintext.charAt(i);
@@ -70,7 +92,7 @@ public class MTPSolver {
                 }
             }
         }
-        HexString guessedKey = new HexString(new String(keyGuess));
+        BasicHexString guessedKey = new BasicHexString(new String(keyGuess));
         System.out.println("Guessed Key:");
         System.out.println(guessedKey.convertToString());
         return guessedKey;

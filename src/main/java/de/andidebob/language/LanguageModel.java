@@ -4,6 +4,7 @@ import de.andidebob.frequency.CharacterFrequency;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public abstract class LanguageModel {
 
@@ -14,6 +15,8 @@ public abstract class LanguageModel {
     }
 
     public abstract List<BiGram> getBigrams();
+
+    public abstract Map<String, Double> getBigramFrequencyMap();
 
     public final CharacterFrequency getForCharacters(char c) {
         return getFrequencies().stream().filter(characterFrequency -> characterFrequency.character() == c).findFirst().get();

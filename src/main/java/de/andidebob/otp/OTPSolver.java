@@ -3,6 +3,7 @@ package de.andidebob.otp;
 import de.andidebob.frequency.CharacterFrequencyResult;
 import de.andidebob.frequency.FrequencyAnalyzer;
 import de.andidebob.language.LanguageModel;
+import de.andidebob.otp.hexstring.BasicHexString;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -14,12 +15,12 @@ public class OTPSolver {
     private final LanguageModel languageModel;
     private final FrequencyAnalyzer frequencyAnalyzer = FrequencyAnalyzer.lettersOnly();
 
-    public String[] decrypt(String[] ciphertextLines, HexString[] potentialKeys) {
+    public String[] decrypt(String[] ciphertextLines, BasicHexString[] potentialKeys) {
         ArrayList<DecryptionResult> results = new ArrayList<>();
-        for (HexString potentialKey : potentialKeys) {
+        for (BasicHexString potentialKey : potentialKeys) {
             String[] resultLines = new String[ciphertextLines.length];
             for (int i = 0; i < ciphertextLines.length; i++) {
-                HexString cipherHex = new HexString(ciphertextLines[i]);
+                BasicHexString cipherHex = new BasicHexString(ciphertextLines[i]);
                 resultLines[i] = potentialKey.xor(cipherHex).convertToString();
             }
             CharacterFrequencyResult frequencyResult = frequencyAnalyzer.analyze(String.join("", resultLines));

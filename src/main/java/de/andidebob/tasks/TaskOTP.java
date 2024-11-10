@@ -1,8 +1,8 @@
 package de.andidebob.tasks;
 
 import de.andidebob.language.EnglishLanguageModel;
-import de.andidebob.otp.HexString;
 import de.andidebob.otp.OTPSolver;
+import de.andidebob.otp.hexstring.BasicHexString;
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ public class TaskOTP implements TaskHandler {
         String[] ciphertext = linesByFile.get(0).clone();
         String plaintext = linesByFile.get(1)[0];
 
-        HexString[] potentialKeys = determinePotentialKeys(ciphertext, plaintext);
+        BasicHexString[] potentialKeys = determinePotentialKeys(ciphertext, plaintext);
 
         return solver.decrypt(ciphertext, potentialKeys);
     }
 
-    private HexString[] determinePotentialKeys(String[] ciphertext, String plaintext) {
-        HexString[] keys = new HexString[ciphertext.length];
-        HexString plainHex = HexString.ofString(plaintext);
+    private BasicHexString[] determinePotentialKeys(String[] ciphertext, String plaintext) {
+        BasicHexString[] keys = new BasicHexString[ciphertext.length];
+        BasicHexString plainHex = BasicHexString.ofString(plaintext);
         for (int i = 0; i < ciphertext.length; i++) {
-            HexString cipherHex = new HexString(ciphertext[i]);
+            BasicHexString cipherHex = new BasicHexString(ciphertext[i]);
             keys[i] = plainHex.xor(cipherHex);
         }
         return keys;

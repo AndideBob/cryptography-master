@@ -12,11 +12,13 @@ public class EnglishLanguageModel extends LanguageModel {
     private static final String BIGRAM_FILE_NAME = "english_bigram.txt";
 
     private final List<BiGram> biGrams;
+    private final HashMap<String, Double> bigramFrequencyMap;
 
     public EnglishLanguageModel() {
         try {
             String[] bigramOccurrences = readBigramOccurrences();
             biGrams = new ArrayList<>();
+            bigramFrequencyMap = new HashMap<>();
             int sumOfOccurrences = Arrays.stream(bigramOccurrences).mapToInt(Integer::parseInt).sum();
             int index = 0;
             for (char first = 'A'; first <= 'Z'; first++) {
@@ -24,6 +26,7 @@ public class EnglishLanguageModel extends LanguageModel {
                     String raw = "" + first + second;
                     double probability = 1.0 * Integer.parseInt(bigramOccurrences[index++]) / sumOfOccurrences;
                     biGrams.add(new BiGram(raw, probability));
+                    bigramFrequencyMap.put(raw, probability);
                 }
             }
         } catch (Exception e) {
@@ -37,6 +40,11 @@ public class EnglishLanguageModel extends LanguageModel {
     @Override
     public List<BiGram> getBigrams() {
         return Collections.unmodifiableList(biGrams);
+    }
+
+    @Override
+    public Map<String, Double> getBigramFrequencyMap() {
+        return Collections.unmodifiableMap(bigramFrequencyMap);
     }
 
     @Override
