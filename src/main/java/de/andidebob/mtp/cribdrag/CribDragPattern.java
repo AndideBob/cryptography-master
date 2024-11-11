@@ -1,4 +1,4 @@
-package de.andidebob.otp.cribdrag;
+package de.andidebob.mtp.cribdrag;
 
 import lombok.RequiredArgsConstructor;
 

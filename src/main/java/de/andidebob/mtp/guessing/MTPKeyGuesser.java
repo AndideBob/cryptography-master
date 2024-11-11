@@ -1,6 +1,5 @@
-package de.andidebob.otp.guessing;
+package de.andidebob.mtp.guessing;
 
-import de.andidebob.mtp.MTPKeyStorage;
 import de.andidebob.otp.StringXORMap;
 import de.andidebob.otp.hexstring.HexString;
 import de.andidebob.otp.hexstring.XORHexString;
@@ -49,10 +48,5 @@ public class MTPKeyGuesser {
         characters.add((char) (b ^ mapping.a()));
         characters.add((char) (b ^ mapping.b()));
         return characters.stream();
-    }
-
-    public void solveKey(Set<HexString> ciphertexts, MTPKeyStorage keyGuess, int requiredKeyLength) {
-
-
     }
 }

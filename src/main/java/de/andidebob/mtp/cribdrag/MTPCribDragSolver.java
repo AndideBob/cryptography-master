@@ -1,21 +1,29 @@
-package de.andidebob.otp.cribdrag;
+package de.andidebob.mtp.cribdrag;
 
 import de.andidebob.language.BigramAnalyzer;
 import de.andidebob.language.EnglishLanguageModel;
+import de.andidebob.mtp.MTPSolver;
 import de.andidebob.otp.hexstring.BasicHexString;
 import de.andidebob.otp.hexstring.HexString;
 import de.andidebob.otp.hexstring.XORHexString;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class CribDragger {
+public class MTPCribDragSolver extends MTPSolver {
 
     private static final double BIGRAM_ANALYSIS_THRESHOLD = -2.0;
 
     private final HashMap<HexString, HexString> cipherPlainTextMap = new HashMap<>();
     private final BigramAnalyzer bigramAnalyzer = new BigramAnalyzer(new EnglishLanguageModel());
+
+    @Override
+    public String[] solve(Collection<HexString> ciphertexts, String cipherTextToDecipher) {
+        analyze(getPaddedXORs(ciphertexts));
+        return new String[0];
+    }
 
     public void analyze(List<XORHexString> paddedXORs) {
         final int textLength = paddedXORs.getFirst().convertToString().length();

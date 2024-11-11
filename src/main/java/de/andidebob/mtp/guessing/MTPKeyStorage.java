@@ -1,4 +1,4 @@
-package de.andidebob.mtp;
+package de.andidebob.mtp.guessing;
 
 import java.util.*;
 

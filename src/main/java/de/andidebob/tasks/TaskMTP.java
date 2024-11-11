@@ -1,17 +1,15 @@
 package de.andidebob.tasks;
 
-import de.andidebob.otp.MTPSolver;
-import de.andidebob.otp.cribdrag.CribDragger;
+import de.andidebob.mtp.MTPSolver;
+import de.andidebob.mtp.guessing.MTPKeyGuessSolver;
 import de.andidebob.otp.hexstring.BasicHexString;
-import de.andidebob.otp.hexstring.XORHexString;
 
 import java.util.List;
 import java.util.Set;
 
 public class TaskMTP implements TaskHandler {
 
-    private final MTPSolver solver = new MTPSolver();
-    private final CribDragger cribdragger = new CribDragger();
+    private final MTPSolver solver = new MTPKeyGuessSolver();
 
     @Override
     public String[] handleInput(List<String[]> linesByFile) {
@@ -25,10 +23,7 @@ public class TaskMTP implements TaskHandler {
 
         String ciphertextToDecipher = cipherLines[cipherLines.length - 1].convertToString();
 
-        List<XORHexString> paddedXORs = solver.getPaddedXORs(Set.of(cipherLines));
-
-        //cribdragger.analyze(paddedXORs);
-        solver.determineKeyByGuessingProbability(Set.of(cipherLines), ciphertextToDecipher.length());
+        solver.solve(Set.of(cipherLines), ciphertextToDecipher);
 
         return new String[]{""};
     }

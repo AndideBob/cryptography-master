@@ -1,7 +1,5 @@
-package de.andidebob.otp;
+package de.andidebob.mtp;
 
-import de.andidebob.mtp.MTPKeyStorage;
-import de.andidebob.otp.guessing.MTPKeyGuesser;
 import de.andidebob.otp.hexstring.BasicHexString;
 import de.andidebob.otp.hexstring.HexString;
 import de.andidebob.otp.hexstring.XORHexString;
@@ -9,9 +7,11 @@ import de.andidebob.otp.hexstring.XORHexString;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MTPSolver {
+public abstract class MTPSolver {
 
-    public List<XORHexString> getPaddedXORs(Collection<HexString> ciphertexts) {
+    public abstract String[] solve(Collection<HexString> ciphertexts, String cipherTextToDecipher);
+
+    protected List<XORHexString> getPaddedXORs(Collection<HexString> ciphertexts) {
         int maxLength = ciphertexts.stream()
                 .max(Comparator.comparingInt(HexString::getLength))
                 .orElseThrow(() -> new RuntimeException("Expected at least one element!"))
@@ -39,39 +39,6 @@ public class MTPSolver {
         }
         return coveredXORs;
     }
-
-    public BasicHexString determineKeyByGuessingProbability(Collection<HexString> ciphertexts, int requiredKeyLength) {
-        List<XORHexString> paddedXORs = getPaddedXORs(ciphertexts);
-
-        MTPKeyStorage possibleKeyCharacters = determinePossibleKeyCharacters(paddedXORs, requiredKeyLength);
-
-        ;
-        System.out.println(possibleKeyCharacters.toString());
-        System.out.println("Permutations: " + possibleKeyCharacters.getPermutations());
-        return new BasicHexString("asdf");
-    }
-
-    private MTPKeyStorage determinePossibleKeyCharacters(List<XORHexString> paddedXORs, int requiredKeyLength) {
-        System.out.println("Determining possible Key Characters...");
-        MTPKeyGuesser keyGuesser = new MTPKeyGuesser(paddedXORs);
-
-        MTPKeyStorage possibleKeyCharacters = keyGuesser.determinePossibleKeyCharacters(false);
-
-        int keyLength = possibleKeyCharacters.getKeyLength();
-        int earliestCharacterNeeded = keyLength - requiredKeyLength;
-        boolean needExtendedAscii = false;
-        for (int i = keyLength - 1; i >= earliestCharacterNeeded; i--) {
-            if (possibleKeyCharacters.getCharactersAt(i).isEmpty()) {
-                needExtendedAscii = true;
-            }
-        }
-        if (needExtendedAscii) {
-            System.out.println("Extended Ascii needed, recomputing...");
-            return keyGuesser.determinePossibleKeyCharacters(true);
-        }
-        return possibleKeyCharacters;
-    }
-
 
     public BasicHexString determineKeyByDoingSomething(Collection<HexString> ciphertexts) {
         List<XORHexString> paddedXORs = getPaddedXORs(ciphertexts);
