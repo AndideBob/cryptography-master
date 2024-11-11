@@ -6,7 +6,6 @@ import de.andidebob.language.LanguageModel;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class VigenereKeyFinder {
@@ -48,9 +47,7 @@ public class VigenereKeyFinder {
 
     private BigramScore calculateBestBigramScore(IndexGroup group) {
         ArrayList<BigramScore> scores = new ArrayList<>();
-        Map<String, Double> bigrams = languageModel.getBigrams()
-                .stream()
-                .collect(Collectors.toMap(BiGram::raw, BiGram::frequency));
+        Map<String, Double> bigrams = languageModel.getBigramFrequencyMap();
         for (String bigram : bigrams.keySet()) {
             AlphabetKey[] bigramKeys = keysForBigrams.get(bigram);
             double score = 0;

@@ -88,6 +88,10 @@ public class BasicHexString implements HexString {
         return new BasicHexString(sb.toString());
     }
 
+    public static BasicHexString ofChar(char c) {
+        return new BasicHexString(Integer.toHexString(c));
+    }
+
     public static HexString empty(int length) {
         if (length < 1) {
             throw new RuntimeException("Length of empty HexString must be greater than 0");
