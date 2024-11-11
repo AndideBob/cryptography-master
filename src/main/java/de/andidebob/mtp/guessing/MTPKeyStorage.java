@@ -35,16 +35,6 @@ public class MTPKeyStorage {
         return Collections.unmodifiableSet(possibilities.get(index));
     }
 
-    public long getPermutations() {
-        long number = 1;
-        for (HashSet<Character> possibility : possibilities) {
-            if (!possibility.isEmpty()) {
-                number *= possibility.size();
-            }
-        }
-        return number;
-    }
-
     public int getKeyLength() {
         return possibilities.size();
     }

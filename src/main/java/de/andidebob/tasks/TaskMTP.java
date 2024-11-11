@@ -23,9 +23,7 @@ public class TaskMTP implements TaskHandler {
 
         String ciphertextToDecipher = cipherLines[cipherLines.length - 1].convertToString();
 
-        solver.solve(Set.of(cipherLines), ciphertextToDecipher);
-
-        return new String[]{""};
+        return solver.solve(Set.of(cipherLines), ciphertextToDecipher);
     }
 
     private BasicHexString[] prepareHexString(String[] lines) {
