@@ -4,7 +4,11 @@ public interface HexString {
 
     XORHexString xor(HexString other);
 
+    XORHexString xorWhereRelevant(HexString other);
+
     HexString padToLength(int length);
+
+    HexString shortenToLength(int length);
 
     HexString getHexCharAt(int index);
 
@@ -13,4 +17,6 @@ public interface HexString {
     int getLength();
 
     String convertToString();
+
+    String convertToStringForPrint();
 }

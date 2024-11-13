@@ -21,6 +21,9 @@ public class MTPCribDragSolver extends MTPSolver {
 
     @Override
     public String[] solve(Collection<HexString> ciphertexts, String cipherTextToDecipher) {
+        for (XORHexString paddedXOR : getPaddedXORs(ciphertexts)) {
+            System.out.println(paddedXOR.convertToString());
+        }
         analyze(getPaddedXORs(ciphertexts));
         return new String[0];
     }

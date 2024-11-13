@@ -1,7 +1,7 @@
 package de.andidebob.tasks;
 
 import de.andidebob.mtp.MTPSolver;
-import de.andidebob.mtp.guessing.MTPKeyGuessSolver;
+import de.andidebob.mtp.spaces.MTPSpaceSolver;
 import de.andidebob.otp.hexstring.BasicHexString;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class TaskMTP implements TaskHandler {
 
-    private final MTPSolver solver = new MTPKeyGuessSolver();
+    private final MTPSolver solver = new MTPSpaceSolver();
 
     @Override
     public String[] handleInput(List<String[]> linesByFile) {

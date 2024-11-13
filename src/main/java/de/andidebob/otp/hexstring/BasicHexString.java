@@ -28,9 +28,34 @@ public class BasicHexString implements HexString {
     }
 
     @Override
+    public XORHexString xorWhereRelevant(HexString other) {
+        int length = Math.min(toString().length(), other.toString().length());
+        String hex1 = this.shortenToLength(length).toString();
+        String hex2 = other.shortenToLength(length).toString();
+
+        // XOR each character and build the result
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int digit1 = Character.digit(hex1.charAt(i), 16);
+            int digit2 = Character.digit(hex2.charAt(i), 16);
+            int xorDigit = digit1 ^ digit2;
+            result.append(Integer.toHexString(xorDigit));
+        }
+        return new XORHexString(result.toString(), this, other);
+    }
+
+    @Override
     public HexString padToLength(int length) {
         String paddedHex = String.format("%" + length + "s", this.hexValue).replace(' ', '0');
         return new BasicHexString(paddedHex);
+    }
+
+    @Override
+    public HexString shortenToLength(int length) {
+        if (hexValue.length() <= length) {
+            return new BasicHexString(hexValue);
+        }
+        return new BasicHexString(hexValue.substring(hexValue.length() - length));
     }
 
     @Override
@@ -63,6 +88,25 @@ public class BasicHexString implements HexString {
     }
 
     @Override
+    public String convertToStringForPrint() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hexValue.length(); i += 2) {
+            String hexPair = hexValue.substring(i, i + 2);
+            int decimal = Integer.parseInt(hexPair, 16);
+            if (decimal == 0) {
+                sb.append('#');
+            } else if (decimal == '\n') {
+                sb.append('#');
+            } else if (decimal == '\r') {
+                sb.append('#');
+            } else {
+                sb.append((char) decimal);
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
     public String toString() {
         return hexValue;
     }
@@ -83,7 +127,8 @@ public class BasicHexString implements HexString {
     public static BasicHexString ofString(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
-            sb.append(Integer.toHexString(c));
+            String s = Integer.toHexString(c);
+            sb.append(s.length() == 1 ? ("0" + s) : s);
         }
         return new BasicHexString(sb.toString());
     }
