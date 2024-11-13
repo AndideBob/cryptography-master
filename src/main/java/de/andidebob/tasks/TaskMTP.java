@@ -2,7 +2,7 @@ package de.andidebob.tasks;
 
 import de.andidebob.mtp.MTPSolver;
 import de.andidebob.mtp.spaces.MTPSpaceSolver;
-import de.andidebob.otp.hexstring.BasicHexString;
+import de.andidebob.otp.hexstring.HexString;
 
 import java.util.List;
 import java.util.Set;
@@ -16,20 +16,20 @@ public class TaskMTP implements TaskHandler {
         if (linesByFile.isEmpty()) {
             throw new RuntimeException("Expected input from at least one file");
         }
-        BasicHexString[] cipherLines = prepareHexString(linesByFile.getFirst());
+        HexString[] cipherLines = prepareHexString(linesByFile.getFirst());
         if (cipherLines.length < 2) {
             throw new RuntimeException("Expected at least 2 lines of input!");
         }
 
-        String ciphertextToDecipher = cipherLines[cipherLines.length - 1].convertToString();
+        String ciphertextToDecipher = cipherLines[cipherLines.length - 1].toString();
 
         return solver.solve(Set.of(cipherLines), ciphertextToDecipher);
     }
 
-    private BasicHexString[] prepareHexString(String[] lines) {
-        BasicHexString[] hexStrings = new BasicHexString[lines.length];
+    private HexString[] prepareHexString(String[] lines) {
+        HexString[] hexStrings = new HexString[lines.length];
         for (int i = 0; i < lines.length; i++) {
-            hexStrings[i] = new BasicHexString(lines[i]);
+            hexStrings[i] = HexString.fromHex(lines[i]);
         }
         return hexStrings;
     }

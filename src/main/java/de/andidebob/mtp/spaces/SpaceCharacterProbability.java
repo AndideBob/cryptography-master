@@ -7,8 +7,7 @@ import java.util.Objects;
 public record SpaceCharacterProbability(HexString hexString, int characterIndex, double probability) {
 
     public Character getHexStringChar() {
-        String s = hexString().convertToString();
-        return s.length() > characterIndex ? hexString.convertToString().charAt(characterIndex) : null;
+        return hexString.length() > characterIndex ? hexString.charAt(characterIndex) : null;
     }
 
     @Override

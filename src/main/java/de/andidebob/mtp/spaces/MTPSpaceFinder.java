@@ -15,8 +15,8 @@ public class MTPSpaceFinder {
         for (HexString cipherTextToCheck : ciphertexts) {
             HashMap<Integer, Integer> probabilities = new HashMap<>();
             for (HexString otherCiphertext : ciphertexts) {
-                String xor = cipherTextToCheck.xor(otherCiphertext).convertToString();
-                int startIndex = xor.length() - Math.min(cipherTextToCheck.convertToString().length(), otherCiphertext.convertToString().length());
+                String xor = cipherTextToCheck.xor(otherCiphertext).toString();
+                int startIndex = xor.length() - Math.min(cipherTextToCheck.toString().length(), otherCiphertext.toString().length());
                 for (int i = startIndex; i < xor.length(); i++) {
                     if ((xor.charAt(i) >= 'a' && xor.charAt(i) <= 'z') || (xor.charAt(i) >= 'A' && xor.charAt(i) <= 'Z')) {
                         if (!probabilities.containsKey(i)) {

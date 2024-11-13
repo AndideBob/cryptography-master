@@ -1,6 +1,5 @@
 package de.andidebob.otp;
 
-import de.andidebob.otp.hexstring.BasicHexString;
 import de.andidebob.otp.hexstring.HexString;
 import lombok.Getter;
 
@@ -18,7 +17,6 @@ public class StringXORMap {
         HashSet<Character> basicCharacters = new HashSet<>();
         HashSet<Character> extendedAsciiCharacters = new HashSet<>();
         for (int i = 32; i <= 255; i++) {
-            char c = (char) i;
             if (i <= 127) {
                 basicCharacters.add((char) i);
             } else {
@@ -44,9 +42,9 @@ public class StringXORMap {
         if (a == b) {
             return;
         }
-        BasicHexString aHex = BasicHexString.ofString("" + a);
-        BasicHexString bHex = BasicHexString.ofString("" + b);
-        BasicHexString xor = aHex.xor(bHex);
+        HexString aHex = new HexString(new char[]{a});
+        HexString bHex = new HexString(new char[]{b});
+        HexString xor = aHex.xor(bHex);
         if (!map.containsKey(xor.toString())) {
             map.put(xor.toString(), new HashSet<>());
         }
