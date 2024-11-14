@@ -18,7 +18,7 @@ public class MTPSpaceFinder {
                 String xor = cipherTextToCheck.xor(otherCiphertext).toString();
                 int startIndex = xor.length() - Math.min(cipherTextToCheck.toString().length(), otherCiphertext.toString().length());
                 for (int i = startIndex; i < xor.length(); i++) {
-                    if ((xor.charAt(i) >= 'a' && xor.charAt(i) <= 'z') || (xor.charAt(i) >= 'A' && xor.charAt(i) <= 'Z')) {
+                    if (MTPSpaceMap.instance.isCharacterResultOfXOrWithSpace(xor.charAt(i))) {
                         if (!probabilities.containsKey(i)) {
                             probabilities.put(i, 1);
                         } else {

@@ -29,7 +29,7 @@ public class MTPSpaceSolver extends MTPSolver {
     }
 
     private String determineKey(List<SpaceCharacterProbability> spaces, final int cipherLength) {
-        Character[] keyCharacters = new Character[cipherLength / 2];
+        Character[] keyCharacters = new Character[cipherLength];
         spaces.sort(Comparator.comparingDouble(SpaceCharacterProbability::probability).reversed());
         try {
             for (SpaceCharacterProbability space : spaces) {
