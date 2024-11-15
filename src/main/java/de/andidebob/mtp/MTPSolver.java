@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public abstract class MTPSolver {
 
-    public abstract String[] solve(Collection<HexString> ciphertexts, String cipherTextToDecipher);
+    public abstract String[] solve(Collection<HexString> ciphertexts);
 
     protected List<HexString> getPaddedXORs(Collection<HexString> ciphertexts) {
         int maxLength = ciphertexts.stream()

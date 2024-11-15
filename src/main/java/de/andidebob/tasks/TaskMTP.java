@@ -21,9 +21,7 @@ public class TaskMTP implements TaskHandler {
             throw new RuntimeException("Expected at least 2 lines of input!");
         }
 
-        String ciphertextToDecipher = cipherLines[cipherLines.length - 1].toString();
-
-        return solver.solve(Set.of(cipherLines), ciphertextToDecipher);
+        return solver.solve(Set.of(cipherLines));
     }
 
     private HexString[] prepareHexString(String[] lines) {
