@@ -1,15 +1,15 @@
 package de.andidebob.tasks;
 
-import de.andidebob.mtp.MTPSolver;
-import de.andidebob.mtp.spaces.MTPSpaceSolver;
+import de.andidebob.language.EnglishLanguageModel;
+import de.andidebob.mtp.spaces.MTPSolver;
 import de.andidebob.otp.hexstring.HexString;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class TaskMTP implements TaskHandler {
 
-    private final MTPSolver solver = new MTPSpaceSolver();
+    private final MTPSolver solver = new MTPSolver(new EnglishLanguageModel());
 
     @Override
     public String[] handleInput(List<String[]> linesByFile) {
@@ -21,7 +21,18 @@ public class TaskMTP implements TaskHandler {
             throw new RuntimeException("Expected at least 2 lines of input!");
         }
 
-        return solver.solve(Set.of(cipherLines));
+        HexString lineToDecode = cipherLines[cipherLines.length - 1];
+
+        HashMap<HexString, String> solutions = solver.solve(cipherLines);
+
+        solutions.forEach((hex, solution) -> {
+            System.out.println("Decoded:");
+            System.out.println(hex.toHex());
+            System.out.println("To:");
+            System.out.println(solution);
+        });
+
+        return new String[]{solutions.get(lineToDecode)};
     }
 
     private HexString[] prepareHexString(String[] lines) {
