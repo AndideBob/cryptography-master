@@ -1,19 +1,21 @@
 package de.andidebob.mtp.spaces;
 
-import de.andidebob.frequency.FrequencyAnalyzer;
+import de.andidebob.language.LanguageAnalyzer;
 import de.andidebob.language.LanguageModel;
 import de.andidebob.otp.hexstring.HexString;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class MTPSolver {
 
-    private final FrequencyAnalyzer frequencyAnalyzer = FrequencyAnalyzer.lettersOnly();
-    private final LanguageModel languageModel;
+    private final LanguageAnalyzer languageAnalyzer;
+
+    public MTPSolver(LanguageModel languageModel) {
+        this.languageAnalyzer = new LanguageAnalyzer(languageModel);
+    }
+
 
     public HashMap<HexString, String> solve(HexString[] ciphertextArray) {
         HashMap<HexString, String> result = new HashMap<>();
@@ -53,6 +55,7 @@ public class MTPSolver {
             return cipherTextsWithSpace.stream().findFirst().orElse(null);
         }
         HashMap<HexString, Double> values = new HashMap<>();
+        System.out.println("Evaluating:");
         for (HexString cipherWithSpace : cipherTextsWithSpace) {
             double deviation = 0;
             for (HexString hexString : result.keySet()) {
@@ -63,11 +66,12 @@ public class MTPSolver {
                     if (MTPSpaceMap.instance.isSpaceXOR(xor)) {
                         s.setCharAt(currentIndex, MTPSpaceMap.instance.getMappingFor(xor));
                     }
-                    double deviationFromLanguageModel = frequencyAnalyzer.analyze(s.toString()).getDeviationFromLanguageModel(languageModel);
-                    deviation += deviationFromLanguageModel;
+                    deviation += languageAnalyzer.getLanguageDeviationScore(s.substring(0, currentIndex));
+                    System.out.println(s.substring(0, currentIndex));
                 }
             }
             values.put(cipherWithSpace, deviation);
+            System.out.println("Deviation: " + deviation);
         }
         return values.entrySet().stream().min(Comparator.comparingDouble(HashMap.Entry::getValue)).orElse(null).getKey();
     }
