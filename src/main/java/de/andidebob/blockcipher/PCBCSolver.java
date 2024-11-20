@@ -23,12 +23,15 @@ public class PCBCSolver {
             throw new IllegalArgumentException("cipherLength must be a multiple of " + decrypter.blockSize);
         }
         int blockCount = cipherLength / decrypter.blockSize;
-        int blockStep = decrypter.blockSize / 8;
+        int blockSizeInBytes = decrypter.blockSize / 8;
+        HexString[] bytes = cipher.splitToCharacters();
         HexString[] blocks = new HexString[blockCount];
         for (int i = 0; i < blockCount; i++) {
-            int start = i * blockStep;
-            int end = start + blockStep;
-            blocks[i] = HexString.fromString(cipher.toString().substring(start, end));
+            HexString[] block = new HexString[blockSizeInBytes];
+            for (int j = 0; j < blockSizeInBytes; j++) {
+                block[j] = bytes[i * blockSizeInBytes + j];
+            }
+            blocks[i] = HexString.join(block);
         }
         return blocks;
     }

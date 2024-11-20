@@ -11,6 +11,13 @@ public class HexString {
         this.characters = characters;
     }
 
+    public HexString(byte[] bytes) {
+        this.characters = new char[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            this.characters[i] = (char) bytes[i];
+        }
+    }
+
     public HexString xor(HexString other) {
         int maxLength = Math.max(this.length(), other.length());
 
@@ -106,5 +113,13 @@ public class HexString {
 
     public static HexString fromString(String str) {
         return new HexString(str.toCharArray());
+    }
+
+    public static HexString join(HexString[] hexStrings) {
+        StringBuilder joined = new StringBuilder();
+        for (HexString hexString : hexStrings) {
+            joined.append(hexString.toHex());
+        }
+        return fromHex(joined.toString());
     }
 }

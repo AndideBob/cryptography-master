@@ -1,5 +1,6 @@
 package de.andidebob;
 
+import de.andidebob.otp.hexstring.HexString;
 import de.andidebob.tasks.TaskHandler;
 
 import java.io.File;
@@ -11,36 +12,44 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.andidebob.file.FileUtils.readFile;
+import static de.andidebob.file.FileUtils.readFileAsBytes;
+import static de.andidebob.file.FileUtils.readFileAsLines;
 
 public class Main {
     public static void main(String[] args) {
+        handleTask(TaskHandler.task07, args);
+    }
+
+    public static String[] handleTask(TaskHandler taskHandler, String[] args) {
         if (args.length < 1) {
             System.out.println("Expected arguments for execution, try --help!");
-            return;
+            return new String[0];
         } else if (args[0].equals("--help")) {
             printHelp();
-            return;
+            return new String[0];
         }
         FileData fileData = readArguments(args);
         String[] outputLines = new String[0];
         try {
-            List<String[]> linesByFile = fileData.inputFiles.stream().map(fileName -> {
+            List<HexString[]> linesByFile = fileData.inputFiles.stream().map(fileName -> {
                 try {
-                    return readFile(fileName);
+                    if (fileName.endsWith(".txt")) {
+                        return readFileAsLines(fileName);
+                    } else {
+                        return new HexString[]{readFileAsBytes(fileName)};
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }).toList();
-            TaskHandler handler = TaskHandler.aes;
-            outputLines = handler.handleInput(linesByFile);
+            outputLines = taskHandler.handleInput(linesByFile);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
         if (fileData.outputFile != null && outputLines.length > 0) {
             writeOutputToFile(String.join("\n", outputLines), fileData.outputFile);
         }
-
+        return outputLines;
     }
 
     private static void printHelp() {

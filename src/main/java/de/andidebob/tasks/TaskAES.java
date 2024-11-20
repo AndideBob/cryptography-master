@@ -8,17 +8,17 @@ import java.util.List;
 
 public class TaskAES implements TaskHandler {
     @Override
-    public String[] handleInput(List<String[]> linesByFile) {
+    public String[] handleInput(List<HexString[]> linesByFile) {
         if (linesByFile.size() < 3) {
             throw new RuntimeException("Expected 3 input files! Key, IV and cipher");
         }
-        HexString key = HexString.fromHex(linesByFile.get(0)[0]);
-        HexString iv = HexString.fromHex(linesByFile.get(1)[0]);
+        HexString key = linesByFile.get(0)[0];
+        HexString iv = linesByFile.get(1)[0];
         System.out.println("Key: ");
         System.out.println(key.toHex());
         System.out.println("IV: ");
         System.out.println(iv.toHex());
-        HexString cipher = prepareData(linesByFile.get(2));
+        HexString cipher = linesByFile.get(2)[0];
         System.out.println("Data: ");
         System.out.println(cipher.toHex());
         PCBCSolver solver = new PCBCSolver(new AESDecrypter(key.length() * 8, key));

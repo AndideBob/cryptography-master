@@ -12,11 +12,11 @@ public class TaskMTP implements TaskHandler {
     private final MTPSolver solver = new MTPSolver(new EnglishLanguageModel());
 
     @Override
-    public String[] handleInput(List<String[]> linesByFile) {
+    public String[] handleInput(List<HexString[]> linesByFile) {
         if (linesByFile.isEmpty()) {
             throw new RuntimeException("Expected input from at least one file");
         }
-        HexString[] cipherLines = prepareHexString(linesByFile.getFirst());
+        HexString[] cipherLines = linesByFile.getFirst();
         if (cipherLines.length < 2) {
             throw new RuntimeException("Expected at least 2 lines of input!");
         }
@@ -33,13 +33,5 @@ public class TaskMTP implements TaskHandler {
         });
 
         return new String[]{solutions.get(lineToDecode)};
-    }
-
-    private HexString[] prepareHexString(String[] lines) {
-        HexString[] hexStrings = new HexString[lines.length];
-        for (int i = 0; i < lines.length; i++) {
-            hexStrings[i] = HexString.fromHex(lines[i]);
-        }
-        return hexStrings;
     }
 }
