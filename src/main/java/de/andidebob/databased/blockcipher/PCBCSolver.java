@@ -8,13 +8,23 @@ public class PCBCSolver {
 
     private final BlockDecrypter decrypter;
 
-    public String solve(FileBytes cipher, ByteBlock key, ByteBlock iv) {
+    public FileBytes solve(FileBytes cipher, ByteBlock iv) {
         ByteBlock[] blocks = extractBlocks(cipher);
         System.out.println("Found " + blocks.length + " blocks!");
-        for (ByteBlock block : blocks) {
-            System.out.println(block.toHex());
+        ByteBlock[] decryptedBlocks = new ByteBlock[blocks.length];
+        for (int i = 0; i < blocks.length; i++) {
+            decryptedBlocks[i] = decrypter.decrypt(blocks[i]);
         }
-        return "";
+        ByteBlock[] resultBlocks = new ByteBlock[decryptedBlocks.length];
+        for (int i = 0; i < decryptedBlocks.length; i++) {
+            if (i == 0) {
+                resultBlocks[i] = decryptedBlocks[i].xor(iv);
+            } else {
+                resultBlocks[i] = decryptedBlocks[i].xor(resultBlocks[i - 1].xor(blocks[i - 1]));
+            }
+        }
+        ByteBlock fullBlock = ByteBlock.join(resultBlocks);
+        return new FileBytes(fullBlock.getBytes());
     }
 
     private ByteBlock[] extractBlocks(FileBytes cipher) {

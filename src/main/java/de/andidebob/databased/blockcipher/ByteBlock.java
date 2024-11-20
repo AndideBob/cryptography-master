@@ -27,6 +27,10 @@ public class ByteBlock {
         data[index] = value;
     }
 
+    public byte[] getBytes() {
+        return Arrays.copyOf(data, data.length);
+    }
+
     public int size() {
         return data.length;
     }

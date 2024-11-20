@@ -22,8 +22,7 @@ public class TaskAES extends DataBasedTask {
         System.out.println(iv.toHex());
         FileBytes cipher = files.get(2);
         PCBCSolver solver = new PCBCSolver(new AESDecrypter(key.size() * 8, key));
-        solver.solve(cipher, key, iv);
-        return new FileBytes(new byte[0]);
+        return solver.solve(cipher, iv);
     }
 
     private ByteBlock getByteBlockFromHexFile(FileBytes file) {
