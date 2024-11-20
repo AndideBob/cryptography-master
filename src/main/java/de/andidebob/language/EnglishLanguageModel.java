@@ -1,10 +1,8 @@
 package de.andidebob.language;
 
 import de.andidebob.frequency.CharacterFrequency;
+import de.andidebob.helper.ResourceReader;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 public class EnglishLanguageModel extends LanguageModel {
@@ -16,7 +14,7 @@ public class EnglishLanguageModel extends LanguageModel {
 
     public EnglishLanguageModel() {
         try {
-            String[] bigramOccurrences = readBigramOccurrences();
+            String[] bigramOccurrences = ResourceReader.readResource(BIGRAM_FILE_NAME);
             biGrams = new ArrayList<>();
             bigramFrequencyMap = new HashMap<>();
             int sumOfOccurrences = Arrays.stream(bigramOccurrences).mapToInt(Integer::parseInt).sum();
@@ -77,24 +75,4 @@ public class EnglishLanguageModel extends LanguageModel {
                 new CharacterFrequency('Q', 0, 0.00099f),
                 new CharacterFrequency('Z', 0, 0.00088f));
     }
-
-    private String[] readBigramOccurrences() {
-        ClassLoader classLoader = getClass().getClassLoader();
-
-        try (InputStream inputStream = Objects.requireNonNull(classLoader.getResourceAsStream(BIGRAM_FILE_NAME))) {
-            List<String> lines = new ArrayList<>();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    lines.add(line);
-                }
-            }
-            return lines.toArray(new String[0]);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to load resource file: " + BIGRAM_FILE_NAME, e);
-        }
-    }
-
 }

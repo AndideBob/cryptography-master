@@ -48,6 +48,14 @@ public class HexString {
         return new HexString(shortened);
     }
 
+    public HexString[] splitToCharacters() {
+        HexString[] result = new HexString[characters.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = fromString("" + charAt(i));
+        }
+        return result;
+    }
+
     public char charAt(int index) {
         return characters[index];
     }
