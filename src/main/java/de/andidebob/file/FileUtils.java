@@ -1,6 +1,6 @@
 package de.andidebob.file;
 
-import de.andidebob.otp.hexstring.HexString;
+import de.andidebob.textbased.hexstring.HexString;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,9 +34,7 @@ public class FileUtils {
         return input.matches("^[0-9a-fA-F]+$");
     }
 
-    public static HexString readFileAsBytes(String filePath) throws IOException {
-        byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-
-        return new HexString(bytes);
+    public static byte[] readFileAsBytes(String filePath) throws IOException {
+        return Files.readAllBytes(Paths.get(filePath));
     }
 }
