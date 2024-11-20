@@ -55,7 +55,6 @@ public class MTPSolver {
             return cipherTextsWithSpace.stream().findFirst().orElse(null);
         }
         HashMap<HexString, Double> values = new HashMap<>();
-        System.out.println("Evaluating:");
         for (HexString cipherWithSpace : cipherTextsWithSpace) {
             double deviation = 0;
             for (HexString hexString : result.keySet()) {
@@ -66,12 +65,10 @@ public class MTPSolver {
                     if (MTPSpaceMap.instance.isSpaceXOR(xor)) {
                         s.setCharAt(currentIndex, MTPSpaceMap.instance.getMappingFor(xor));
                     }
-                    deviation += languageAnalyzer.getLanguageDeviationScore(s.substring(0, currentIndex));
-                    System.out.println(s.substring(0, currentIndex));
+                    deviation += languageAnalyzer.getLanguageDeviationScore(s.substring(0, currentIndex + 1));
                 }
             }
             values.put(cipherWithSpace, deviation);
-            System.out.println("Deviation: " + deviation);
         }
         return values.entrySet().stream().min(Comparator.comparingDouble(HashMap.Entry::getValue)).orElse(null).getKey();
     }
