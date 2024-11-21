@@ -20,7 +20,7 @@ public class AESSBox {
     private final ArrayList<BoxValue> boxValues = new ArrayList<>();
 
     private AESSBox() {
-        String[] lines = ResourceReader.readResource(TABLE_FILE);
+        String[] lines = ResourceReader.readResourceAsString(TABLE_FILE);
         // Drop first 2 lines
         for (int i = 2; i < lines.length; i++) {
             String[] values = lines[i].split("\t");

@@ -1,8 +1,10 @@
 package de.andidebob.tasks;
 
 import de.andidebob.Tasks;
+import de.andidebob.helper.ResourceReader;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskTests {
@@ -98,7 +100,8 @@ public class TaskTests {
     public void testTask07() {
         System.out.println("Running Task07:");
         byte[] result = Tasks.TASK_07.handle(extractArgs("-in .\\tasks\\task07\\key.txt .\\tasks\\task07\\iv.txt .\\tasks\\task07\\cipher.jpg"));
-        // TODO
+        byte[] solution = ResourceReader.readResourceAsBytes("task07_solution.jpg");
+        assertArrayEquals(result, solution);
     }
 
     private static String[] extractArgs(String argString) {

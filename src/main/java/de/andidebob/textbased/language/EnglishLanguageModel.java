@@ -14,7 +14,7 @@ public class EnglishLanguageModel extends LanguageModel {
 
     public EnglishLanguageModel() {
         try {
-            String[] bigramOccurrences = ResourceReader.readResource(BIGRAM_FILE_NAME);
+            String[] bigramOccurrences = ResourceReader.readResourceAsString(BIGRAM_FILE_NAME);
             biGrams = new ArrayList<>();
             bigramFrequencyMap = new HashMap<>();
             int sumOfOccurrences = Arrays.stream(bigramOccurrences).mapToInt(Integer::parseInt).sum();

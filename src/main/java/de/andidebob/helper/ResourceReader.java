@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class ResourceReader {
 
-    public static String[] readResource(String resourceName) {
+    public static String[] readResourceAsString(String resourceName) {
         ClassLoader classLoader = ResourceReader.class.getClassLoader();
 
         try (InputStream inputStream = Objects.requireNonNull(classLoader.getResourceAsStream(resourceName))) {
@@ -21,6 +21,18 @@ public class ResourceReader {
                 }
             }
             return lines.toArray(new String[0]);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load resource file: " + resourceName, e);
+        }
+    }
+
+    public static byte[] readResourceAsBytes(String resourceName) {
+        ClassLoader classLoader = ResourceReader.class.getClassLoader();
+
+        try (InputStream inputStream = Objects.requireNonNull(classLoader.getResourceAsStream(resourceName))) {
+            return inputStream.readAllBytes();
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
