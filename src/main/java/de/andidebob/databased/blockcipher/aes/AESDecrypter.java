@@ -25,19 +25,27 @@ public class AESDecrypter extends BlockDecrypter {
     @Override
     protected ByteBlock decrypt(ByteBlock block) {
         ByteMatrix current = ByteMatrix.of(block);
-        for (int round = 0; round < roundKeys.length; round++) {
-            final ByteBlock roundKey = roundKeys[roundKeys.length - (round + 1)];
+        final int lastRound = roundKeys.length - 1;
+        System.out.println("Decrypting...");
+        for (int round = 0; round <= lastRound; round++) {
+            int keyIndex = roundKeys.length - (round + 1);
+            final ByteBlock roundKey = roundKeys[keyIndex];
+            System.out.println("-KeyIndex: " + keyIndex);
             current = applyKeyAddition(current, roundKey);
-            if (round > 0) {
-                current = applyInverseMixColumns(current);
+            if (round != lastRound) {
+                if (round > 0) {
+                    current = applyInverseMixColumns(current);
+                }
+                current = applyInverseShiftRows(current);
+                current = applyInverseByteSubstitution(current);
             }
-            current = applyInverseShiftRows(current);
-            current = applyInverseByteSubstitution(current);
         }
+        System.out.println("Decryption Done!");
         return current.merge();
     }
 
     private ByteMatrix applyKeyAddition(ByteMatrix matrix, ByteBlock roundKey) {
+        System.out.println("--KeyAddition [" + roundKey.toHex() + "]");
         ByteBlock[] keyParts = roundKey.split(4);
         ByteBlock[] rows = matrix.getRows();
         ByteMatrix result = new ByteMatrix();
@@ -48,15 +56,17 @@ public class AESDecrypter extends BlockDecrypter {
     }
 
     private ByteMatrix applyInverseMixColumns(ByteMatrix matrix) {
+        System.out.println("--InverseMixColumns");
         ByteMatrix result = new ByteMatrix();
         ByteBlock[] columns = matrix.getColumns();
         for (int i = 0; i < columns.length; i++) {
             result.setColumn(i, applyInverseMixColum(columns[i]));
         }
-        return matrix;
+        return result;
     }
 
     private ByteMatrix applyInverseShiftRows(ByteMatrix matrix) {
+        System.out.println("--InverseShiftRows");
         ByteBlock[] rows = matrix.getRows();
         ByteMatrix result = new ByteMatrix();
         for (int i = 0; i < rows.length; i++) {
@@ -66,6 +76,7 @@ public class AESDecrypter extends BlockDecrypter {
     }
 
     private ByteMatrix applyInverseByteSubstitution(ByteMatrix matrix) {
+        System.out.println("--InverseByteSubstitution");
         ByteMatrix result = new ByteMatrix();
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
@@ -73,6 +84,6 @@ public class AESDecrypter extends BlockDecrypter {
                 result.setByte(row, col, AESSBox.getInstance().applyInverseSBox(b).getByte(0));
             }
         }
-        return matrix;
+        return result;
     }
 }

@@ -129,6 +129,19 @@ public class ByteBlock {
         return new ByteBlock(data);
     }
 
+    public static ByteBlock join(ByteBlock[] blocksA, ByteBlock... blocksB) {
+        int size = blocksA.length + blocksB.length;
+        ByteBlock[] fullArray = new ByteBlock[size];
+        int index;
+        for (index = 0; index < blocksA.length; index++) {
+            fullArray[index] = blocksA[index];
+        }
+        for (ByteBlock block : blocksB) {
+            fullArray[index++] = block;
+        }
+        return join(fullArray);
+    }
+
     public static ByteBlock join(ByteBlock... blocks) {
         int size = 0;
         for (ByteBlock block : blocks) {

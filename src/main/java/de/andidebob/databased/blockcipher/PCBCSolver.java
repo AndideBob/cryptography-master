@@ -2,6 +2,7 @@ package de.andidebob.databased.blockcipher;
 
 import de.andidebob.databased.FileBytes;
 import de.andidebob.databased.blockcipher.blocks.ByteBlock;
+import de.andidebob.databased.blockcipher.padding.PKCS7Helper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,7 +15,7 @@ public class PCBCSolver {
         System.out.println("Found " + blocks.length + " blocks!");
         ByteBlock[] decryptedBlocks = new ByteBlock[blocks.length];
         for (int i = 0; i < blocks.length; i++) {
-            decryptedBlocks[i] = decrypter.decrypt(blocks[i]);
+            decryptedBlocks[i] = decrypter.decryptBlock(blocks[i]);
         }
         ByteBlock[] resultBlocks = new ByteBlock[decryptedBlocks.length];
         for (int i = 0; i < decryptedBlocks.length; i++) {
@@ -24,7 +25,7 @@ public class PCBCSolver {
                 resultBlocks[i] = decryptedBlocks[i].xor(resultBlocks[i - 1].xor(blocks[i - 1]));
             }
         }
-        ByteBlock fullBlock = ByteBlock.join(resultBlocks);
+        ByteBlock fullBlock = joinBytesAndTrimEnd(resultBlocks);
         return new FileBytes(fullBlock.getBytes());
     }
 
@@ -44,5 +45,17 @@ public class PCBCSolver {
             }
         }
         return blocks;
+    }
+
+    private ByteBlock joinBytesAndTrimEnd(ByteBlock[] blocks) {
+        ByteBlock[] fileBlocks = new ByteBlock[blocks.length - 1];
+        System.arraycopy(blocks, 0, fileBlocks, 0, fileBlocks.length);
+        ByteBlock lastBlock = blocks[blocks.length - 1];
+        if (PKCS7Helper.isFullyPadded(lastBlock)) {
+            return ByteBlock.join(fileBlocks);
+        }
+        ByteBlock blockWithRemovedPadding = PKCS7Helper.removePadding(lastBlock);
+        return ByteBlock.join(fileBlocks, blockWithRemovedPadding);
+
     }
 }
