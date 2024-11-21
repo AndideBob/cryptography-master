@@ -2,9 +2,9 @@ package de.andidebob.databased.tasks;
 
 import de.andidebob.databased.DataBasedTask;
 import de.andidebob.databased.FileBytes;
-import de.andidebob.databased.blockcipher.ByteBlock;
 import de.andidebob.databased.blockcipher.PCBCSolver;
 import de.andidebob.databased.blockcipher.aes.AESDecrypter;
+import de.andidebob.databased.blockcipher.blocks.ByteBlock;
 
 import java.util.List;
 

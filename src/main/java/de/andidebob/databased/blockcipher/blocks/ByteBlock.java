@@ -1,4 +1,4 @@
-package de.andidebob.databased.blockcipher;
+package de.andidebob.databased.blockcipher.blocks;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -29,6 +29,27 @@ public class ByteBlock {
 
     public byte[] getBytes() {
         return Arrays.copyOf(data, data.length);
+    }
+
+    public ByteBlock shift(int amount) {
+        if (size() == 0) {
+            return new ByteBlock(new byte[0]);
+        }
+        // Normalize
+        while (amount < 0) {
+            amount += size();
+        }
+        amount = amount % size();
+        // Return same ByteBlock for no shift
+        if (amount == 0) {
+            return new ByteBlock(getBytes());
+        }
+
+        ByteBlock result = new ByteBlock(size());
+        for (int i = 0; i < size(); i++) {
+            result.setByte((i + amount) % size(), getByte(i));
+        }
+        return result;
     }
 
     public int size() {

@@ -1,5 +1,6 @@
 package de.andidebob.databased.blockcipher;
 
+import de.andidebob.databased.blockcipher.blocks.ByteBlock;
 import lombok.Getter;
 
 @Getter

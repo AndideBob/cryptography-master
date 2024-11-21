@@ -1,6 +1,6 @@
 package de.andidebob.databased.blockcipher.aes;
 
-import de.andidebob.databased.blockcipher.ByteBlock;
+import de.andidebob.databased.blockcipher.blocks.ByteBlock;
 
 public class AESKeyCalculator128Bit implements AESKeyCalculator {
 
@@ -34,12 +34,7 @@ public class AESKeyCalculator128Bit implements AESKeyCalculator {
     }
 
     private ByteBlock byteShiftLeft(ByteBlock before) {
-        int size = before.size();
-        ByteBlock shifted = new ByteBlock(size);
-        for (int i = 1; i <= before.size(); i++) {
-            shifted.setByte(i - 1, before.getByte(i % size));
-        }
-        return shifted;
+        return before.shift(-1);
     }
 
     private ByteBlock applySBox(ByteBlock before) {

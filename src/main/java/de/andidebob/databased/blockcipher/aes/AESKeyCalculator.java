@@ -1,6 +1,6 @@
 package de.andidebob.databased.blockcipher.aes;
 
-import de.andidebob.databased.blockcipher.ByteBlock;
+import de.andidebob.databased.blockcipher.blocks.ByteBlock;
 
 public interface AESKeyCalculator {
     ByteBlock[] calculateRoundKeys(ByteBlock key);
