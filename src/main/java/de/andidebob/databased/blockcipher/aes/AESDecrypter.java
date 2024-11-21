@@ -4,6 +4,8 @@ import de.andidebob.databased.blockcipher.BlockDecrypter;
 import de.andidebob.databased.blockcipher.blocks.ByteBlock;
 import de.andidebob.databased.blockcipher.blocks.ByteMatrix;
 
+import static de.andidebob.databased.blockcipher.aes.AESDecryptionHelper.applyInverseMixColum;
+
 public class AESDecrypter extends BlockDecrypter {
 
     final ByteBlock[] roundKeys;
@@ -46,7 +48,11 @@ public class AESDecrypter extends BlockDecrypter {
     }
 
     private ByteMatrix applyInverseMixColumns(ByteMatrix matrix) {
-        // TODO
+        ByteMatrix result = new ByteMatrix();
+        ByteBlock[] columns = matrix.getColumns();
+        for (int i = 0; i < columns.length; i++) {
+            result.setColumn(i, applyInverseMixColum(columns[i]));
+        }
         return matrix;
     }
 
@@ -60,7 +66,13 @@ public class AESDecrypter extends BlockDecrypter {
     }
 
     private ByteMatrix applyInverseByteSubstitution(ByteMatrix matrix) {
-        // TODO
+        ByteMatrix result = new ByteMatrix();
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                byte b = matrix.getByte(row, col);
+                result.setByte(row, col, AESSBox.getInstance().applyInverseSBox(b).getByte(0));
+            }
+        }
         return matrix;
     }
 }

@@ -44,6 +44,10 @@ public class AESSBox {
         }
     }
 
+    public ByteBlock applySBox(byte in) {
+        return applySBox(new ByteBlock(in));
+    }
+
     public ByteBlock applySBox(ByteBlock in) {
         ByteBlock out = new ByteBlock(in.size());
         for (int i = 0; i < out.size(); i++) {
@@ -51,6 +55,10 @@ public class AESSBox {
             out.setByte(i, boxValue.sb().getByte(0));
         }
         return out;
+    }
+
+    public ByteBlock applyInverseSBox(byte in) {
+        return applyInverseSBox(new ByteBlock(in));
     }
 
     public ByteBlock applyInverseSBox(ByteBlock in) {
@@ -62,6 +70,10 @@ public class AESSBox {
         return out;
     }
 
+    public ByteBlock applyMult02(byte in) {
+        return applyMult02(new ByteBlock(in));
+    }
+
     public ByteBlock applyMult02(ByteBlock in) {
         ByteBlock out = new ByteBlock(in.size());
         for (int i = 0; i < out.size(); i++) {
@@ -69,6 +81,10 @@ public class AESSBox {
             out.setByte(i, boxValue.mult02().getByte(0));
         }
         return out;
+    }
+
+    public ByteBlock applyMult03(byte in) {
+        return applyMult03(new ByteBlock(in));
     }
 
     public ByteBlock applyMult03(ByteBlock in) {
@@ -80,6 +96,10 @@ public class AESSBox {
         return out;
     }
 
+    public ByteBlock applyMult09(byte in) {
+        return applyMult09(new ByteBlock(in));
+    }
+
     public ByteBlock applyMult09(ByteBlock in) {
         ByteBlock out = new ByteBlock(in.size());
         for (int i = 0; i < out.size(); i++) {
@@ -87,6 +107,10 @@ public class AESSBox {
             out.setByte(i, boxValue.mult09().getByte(0));
         }
         return out;
+    }
+
+    public ByteBlock applyMult0B(byte in) {
+        return applyMult0B(new ByteBlock(in));
     }
 
     public ByteBlock applyMult0B(ByteBlock in) {
@@ -98,6 +122,10 @@ public class AESSBox {
         return out;
     }
 
+    public ByteBlock applyMult0D(byte in) {
+        return applyMult0D(new ByteBlock(in));
+    }
+
     public ByteBlock applyMult0D(ByteBlock in) {
         ByteBlock out = new ByteBlock(in.size());
         for (int i = 0; i < out.size(); i++) {
@@ -105,6 +133,10 @@ public class AESSBox {
             out.setByte(i, boxValue.mult0D().getByte(0));
         }
         return out;
+    }
+
+    public ByteBlock applyMult0E(byte in) {
+        return applyMult0E(new ByteBlock(in));
     }
 
     public ByteBlock applyMult0E(ByteBlock in) {
