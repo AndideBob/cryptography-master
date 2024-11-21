@@ -44,18 +44,19 @@ public class AESDecrypter extends BlockDecrypter {
         return current.merge();
     }
 
-    private ByteMatrix applyKeyAddition(ByteMatrix matrix, ByteBlock roundKey) {
+    protected ByteMatrix applyKeyAddition(ByteMatrix matrix, ByteBlock roundKey) {
         System.out.println("--KeyAddition [" + roundKey.toHex() + "]");
         ByteBlock[] keyParts = roundKey.split(4);
-        ByteBlock[] rows = matrix.getRows();
+        // Rows or columns?
+        ByteBlock[] columns = matrix.getColumns();
         ByteMatrix result = new ByteMatrix();
-        for (int i = 0; i < rows.length; i++) {
-            result.setRow(i, rows[i].xor(keyParts[i]));
+        for (int i = 0; i < columns.length; i++) {
+            result.setColumn(i, columns[i].xor(keyParts[i]));
         }
         return result;
     }
 
-    private ByteMatrix applyInverseMixColumns(ByteMatrix matrix) {
+    protected ByteMatrix applyInverseMixColumns(ByteMatrix matrix) {
         System.out.println("--InverseMixColumns");
         ByteMatrix result = new ByteMatrix();
         ByteBlock[] columns = matrix.getColumns();
@@ -65,7 +66,7 @@ public class AESDecrypter extends BlockDecrypter {
         return result;
     }
 
-    private ByteMatrix applyInverseShiftRows(ByteMatrix matrix) {
+    protected ByteMatrix applyInverseShiftRows(ByteMatrix matrix) {
         System.out.println("--InverseShiftRows");
         ByteBlock[] rows = matrix.getRows();
         ByteMatrix result = new ByteMatrix();
@@ -75,7 +76,7 @@ public class AESDecrypter extends BlockDecrypter {
         return result;
     }
 
-    private ByteMatrix applyInverseByteSubstitution(ByteMatrix matrix) {
+    protected ByteMatrix applyInverseByteSubstitution(ByteMatrix matrix) {
         System.out.println("--InverseByteSubstitution");
         ByteMatrix result = new ByteMatrix();
         for (int row = 0; row < 4; row++) {
